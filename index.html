@@ -279,7 +279,7 @@
     border-left: 3px solid #009cde;
     border-radius: 10px;
     text-align: center;
-    max-height: 400px;
+    max-height: 600px;
     overflow: hidden;
     transition: opacity 3s ease, max-height 3s ease, padding 3s ease, margin 3s ease, border-width 3s ease;
   }
@@ -297,7 +297,7 @@
   .pp-pal { font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 1.25rem; color: #009cde; }
   .donate-text {
     margin: 0 0 14px;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: #b0b8d8;
     line-height: 1.5;
   }
@@ -319,6 +319,52 @@
     transition: background 0.15s;
   }
   .btn-donate-main:active { background: #ffb020; }
+  .donate-amounts {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .btn-amount {
+    flex: 1;
+    padding: 9px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 112, 186, 0.35);
+    background: none;
+    color: #9095b0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-amount.on {
+    background: rgba(0, 112, 186, 0.20);
+    border-color: #0070ba;
+    color: #4db3f0;
+  }
+  .donate-custom-row {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  #donate-custom-input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 112, 186, 0.35);
+    background: rgba(0, 0, 0, 0.2);
+    color: #e8eaf0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  #donate-custom-input::-webkit-outer-spin-button,
+  #donate-custom-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .donate-custom-euro { color: #9095b0; font-size: 1rem; font-weight: 600; }
   .btn-donate-later {
     display: block;
     width: 100%;
@@ -337,6 +383,7 @@
   @media (hover: hover) {
     .btn-donate-main:hover { background: #ffb020; }
     .btn-donate-later:hover { border-color: #9095b0; color: #c8cde4; background: rgba(144,149,176,0.08); }
+    .btn-amount:hover { border-color: #0070ba; color: #c8cde4; }
   }
   .detail-title {
     font-family: 'Bebas Neue', sans-serif;
@@ -654,8 +701,17 @@
       <span class="pp-pay">Pay</span><span class="pp-pal">Pal</span>
     </span>
   </div>
-  <p class="donate-text">Diese App ist kostenlos &amp; werbefrei.<br>Wenn sie dir nützlich ist, freue ich mich sehr über eine kleine Unterstützung! ☕</p>
-  <a class="btn-donate-main" href="https://www.paypal.me/AnsgarNitsche/1.50" target="_blank" rel="noopener">☕ Jetzt 1,50 € spenden</a>
+  <p class="donate-text" id="donate-text"></p>
+  <div class="donate-amounts">
+    <button class="btn-amount"    onclick="setDonateAmount(1.50, this)">1,50 €</button>
+    <button class="btn-amount on" onclick="setDonateAmount(2.50, this)">2,50 €</button>
+    <button class="btn-amount"    onclick="setDonateAmount('custom', this)">Anderer Betrag</button>
+  </div>
+  <div class="donate-custom-row" id="donate-custom-row">
+    <input type="number" id="donate-custom-input" min="0.50" step="0.50" placeholder="0,00" oninput="updateDonateBtn()">
+    <span class="donate-custom-euro">€</span>
+  </div>
+  <a class="btn-donate-main" id="btn-donate-main" href="https://www.paypal.me/AnsgarNitsche/2.50" target="_blank" rel="noopener">☕ Jetzt 2,50 € spenden</a>
   <button class="btn-donate-later" onclick="closeDonate()">Vielleicht später →</button>
 </div>
 
@@ -800,6 +856,10 @@ const LIGHT_THEME_CSS = `
   #donate-banner { background: rgba(0,48,135,0.06); border-color: rgba(0,112,186,0.25); }
   .donate-text { color: #3a4060; }
   .btn-donate-later { color: #707a9a; }
+  .btn-amount { color: #5a6090; }
+  .btn-amount.on { color: #0060a0; border-color: #0070ba; background: rgba(0,112,186,0.12); }
+  #donate-custom-input { background: rgba(255,255,255,0.7); color: #1a1d2e; border-color: rgba(0,112,186,0.4); }
+  .donate-custom-euro { color: #5a6090; }
 `;
 
 let _scrollY = 0;
@@ -816,6 +876,45 @@ function unlockBodyScroll() {
   document.body.style.overflow = '';
   document.body.style.width = '';
   window.scrollTo(0, _scrollY);
+}
+
+let _donateAmount = 2.50;
+let _donateCustom = false;
+
+function setDonateAmount(val, btn) {
+  document.querySelectorAll('.btn-amount').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const customRow = document.getElementById('donate-custom-row');
+  if (val === 'custom') {
+    _donateCustom = true;
+    customRow.style.display = 'flex';
+    document.getElementById('donate-custom-input').focus();
+    _donateAmount = parseFloat((document.getElementById('donate-custom-input').value || '').replace(',', '.')) || 0;
+  } else {
+    _donateCustom = false;
+    customRow.style.display = 'none';
+    _donateAmount = val;
+  }
+  updateDonateBtn();
+}
+
+function updateDonateBtn() {
+  if (_donateCustom) {
+    _donateAmount = parseFloat((document.getElementById('donate-custom-input').value || '').replace(',', '.')) || 0;
+  }
+  const btn = document.getElementById('btn-donate-main');
+  if (!btn) return;
+  if (_donateAmount > 0) {
+    const fmt = _donateAmount.toFixed(2).replace('.', ',');
+    btn.href = 'https://www.paypal.me/AnsgarNitsche/' + _donateAmount.toFixed(2);
+    btn.textContent = '☕ Jetzt ' + fmt + ' € spenden';
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = '';
+  } else {
+    btn.textContent = '☕ Betrag eingeben';
+    btn.style.opacity = '0.45';
+    btn.style.pointerEvents = 'none';
+  }
 }
 
 function closeDonate() {
@@ -1110,6 +1209,18 @@ function saveState() {
 }
 
 /* ── Spenden-Banner: jeden 3. Start anzeigen ────────────────── */
+const DONATE_TEXTS = [
+  'Diese App ist kostenlos & werbefrei.\nWenn sie dir nützlich ist, freue ich mich sehr über eine kleine Unterstützung! ☕',
+  'Diese App läuft auf Koffein — meins wird knapp. ☕',
+  'Kannst du heute auf eine Cola verzichten?\nIch freu mich drüber! 🥤',
+  'Kein Aufschlagfehler, keine Werbung —\nnur eine kleine Bitte um Unterstützung. 🎾',
+  'Werbung wäre die andere Option gewesen.\nDu siehst, wofür ich mich entschieden hab.',
+  'Der Spielplan ist gratis.\nDer Entwickler trinkt trotzdem Kaffee. ☕',
+  'Für jeden Match-Tiebreak deiner Mannschaft —\nvielleicht ein kleiner Kaffee?',
+  'Programmieren macht Durst. Und Hunger. Und Müdigkeit. 😅',
+  'Ein Ass auf dem Platz —\nein Kaffee für den Entwickler?',
+];
+
 (function() {
   const count = (parseInt(localStorage.getItem(LS_STARTS) || '0') + 1);
   localStorage.setItem(LS_STARTS, count);
@@ -1118,6 +1229,10 @@ function saveState() {
     if (b) b.style.display = 'none';
     const m = document.getElementById('main-content');
     if (m) { m.style.opacity = '1'; m.style.pointerEvents = ''; }
+  } else {
+    const idx = Math.floor((count - 4) / 3) % DONATE_TEXTS.length;
+    const el = document.getElementById('donate-text');
+    if (el) el.innerHTML = DONATE_TEXTS[idx].replace(/\n/g, '<br>');
   }
 })();
 
