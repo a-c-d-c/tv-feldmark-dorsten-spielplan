@@ -982,8 +982,8 @@ let allMatches  = [];
 function loadState() {
   const raw = localStorage.getItem(LS_STATE);
   if (raw === null) {
-    // Erster Start: AKTUELL + HEIM aktiv, alle Mannschaften, MEINE AUSWAHL leer
-    return { showPast: false, showFuture: true, showHome: true, showAway: false, showTeams: {}, selectMode: 'all' };
+    // Erster Start: AKTUELL + HEIM + AUSWÄRTS aktiv, alle Mannschaften, MEINE AUSWAHL leer
+    return { showPast: false, showFuture: true, showHome: true, showAway: true, showTeams: {}, selectMode: 'all' };
   }
   try {
     const s = JSON.parse(raw);
@@ -996,7 +996,7 @@ function loadState() {
       selectMode: s.selectMode || null
     };
   } catch(e) {
-    return { showPast: false, showFuture: true, showHome: true, showAway: false, showTeams: {}, selectMode: 'all' };
+    return { showPast: false, showFuture: true, showHome: true, showAway: true, showTeams: {}, selectMode: 'all' };
   }
 }
 
