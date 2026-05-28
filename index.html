@@ -1936,7 +1936,7 @@ async function showInfo() {
   document.getElementById('info-view').style.display = 'block';
   const el = document.getElementById('info-content');
   try {
-    const res = await fetch('./info.html');
+    const res = await fetch('./info.html?v=' + Date.now());
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const html = await res.text();
     const m = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
