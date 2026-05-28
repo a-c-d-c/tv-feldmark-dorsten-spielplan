@@ -391,6 +391,7 @@
     letter-spacing: 0.06em;
     color: #fff;
   }
+  .info-theme-row { margin-left: auto; display: flex; gap: 8px; }
   #detail-table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .standings-table {
     min-width: 480px;
@@ -782,6 +783,10 @@
 <div id="info-view">
   <div class="detail-header">
     <button class="btn-back" onclick="backToList()">← Zurück</button>
+    <div class="info-theme-row">
+      <button class="btn btn-filter" id="btn-info-theme-dark"  onclick="setTheme('dark')">Dunkel</button>
+      <button class="btn btn-filter" id="btn-info-theme-light" onclick="setTheme('light')">Hell</button>
+    </div>
   </div>
   <div class="info-content" id="info-content"></div>
 </div>
@@ -860,6 +865,10 @@ const LIGHT_THEME_CSS = `
   .btn-amount.on { color: #0060a0; border-color: #0070ba; background: rgba(0,112,186,0.12); }
   #donate-custom-input { background: rgba(255,255,255,0.7); color: #1a1d2e; border-color: rgba(0,112,186,0.4); }
   .donate-custom-euro { color: #5a6090; }
+  #info-donate { background: rgba(0,48,135,0.06); border-color: rgba(0,112,186,0.25); }
+  .btn-amount-info { color: #5a6090; }
+  .btn-amount-info.on { color: #0060a0; border-color: #0070ba; background: rgba(0,112,186,0.12); }
+  #donate-custom-input-info { background: rgba(255,255,255,0.7); color: #1a1d2e; border-color: rgba(0,112,186,0.4); }
 `;
 
 let _scrollY = 0;
@@ -882,7 +891,7 @@ let _donateAmount = 2.50;
 let _donateCustom = false;
 
 function setDonateAmount(val, btn) {
-  document.querySelectorAll('.btn-amount').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#donate-banner .btn-amount').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   const customRow = document.getElementById('donate-custom-row');
   if (val === 'custom') {
@@ -934,6 +943,58 @@ function closeDonate() {
   }
 }
 
+function toggleAccordion(id) {
+  const body = document.getElementById(id);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('#info-content .accordion-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('#info-content .accordion-btn').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    const btn = document.querySelector('#info-content .accordion-btn[data-target="' + id + '"]');
+    if (btn) btn.classList.add('open');
+  }
+}
+
+let _donateAmountInfo = 2.50;
+let _donateCustomInfo = false;
+
+function setDonateAmountInfo(val, btn) {
+  document.querySelectorAll('#info-donate .btn-amount-info').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const customRow = document.getElementById('donate-custom-row-info');
+  if (val === 'custom') {
+    _donateCustomInfo = true;
+    if (customRow) customRow.style.display = 'flex';
+    const inp = document.getElementById('donate-custom-input-info');
+    if (inp) inp.focus();
+    _donateAmountInfo = parseFloat(((inp && inp.value) || '').replace(',', '.')) || 0;
+  } else {
+    _donateCustomInfo = false;
+    if (customRow) customRow.style.display = 'none';
+    _donateAmountInfo = val;
+  }
+  updateDonateBtnInfo();
+}
+
+function updateDonateBtnInfo() {
+  if (_donateCustomInfo) {
+    const inp = document.getElementById('donate-custom-input-info');
+    _donateAmountInfo = parseFloat(((inp && inp.value) || '').replace(',', '.')) || 0;
+  }
+  const btn = document.getElementById('btn-donate-main-info');
+  if (!btn) return;
+  if (_donateAmountInfo > 0) {
+    const fmt = _donateAmountInfo.toFixed(2).replace('.', ',');
+    btn.href = 'https://www.paypal.me/AnsgarNitsche/' + _donateAmountInfo.toFixed(2);
+    btn.textContent = '☕ Jetzt ' + fmt + ' € spenden';
+    btn.style.opacity = '1'; btn.style.pointerEvents = '';
+  } else {
+    btn.textContent = '☕ Betrag eingeben';
+    btn.style.opacity = '0.45'; btn.style.pointerEvents = 'none';
+  }
+}
+
 function setTheme(theme) {
   const isLight = theme === 'light';
   document.getElementById('theme-override-css').textContent = isLight ? LIGHT_THEME_CSS : '';
@@ -942,6 +1003,10 @@ function setTheme(theme) {
   const btnLight = document.getElementById('btn-theme-light');
   if (btnDark)  btnDark.classList.toggle('on', !isLight);
   if (btnLight) btnLight.classList.toggle('on',  isLight);
+  const btnInfoDark  = document.getElementById('btn-info-theme-dark');
+  const btnInfoLight = document.getElementById('btn-info-theme-light');
+  if (btnInfoDark)  btnInfoDark.classList.toggle('on', !isLight);
+  if (btnInfoLight) btnInfoLight.classList.toggle('on',  isLight);
   localStorage.setItem(LS_THEME, theme);
 }
 
@@ -1876,6 +1941,8 @@ async function showInfo() {
     const html = await res.text();
     const m = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
     el.innerHTML = m ? m[1] : html;
+    _donateAmountInfo = 2.50;
+    _donateCustomInfo = false;
   } catch(e) {
     el.innerHTML = '<p style="color:#b87070">Info-Seite konnte nicht geladen werden.</p>';
   }
