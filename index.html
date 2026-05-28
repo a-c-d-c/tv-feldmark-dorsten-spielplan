@@ -1507,7 +1507,8 @@ function renderNextMatch() {
     document.getElementById('nm-teams').innerHTML    = '<span style="font-size:1.05rem;text-align:center;width:100%;display:block">Keine Mannschaften ausgewählt</span>';
     const nl = document.getElementById('nm-league');
     nl.textContent = ''; nl.className = 'nm-league';
-    document.getElementById('nm-days').textContent   = '';
+    const nmDays0 = document.getElementById('nm-days');
+    nmDays0.textContent = ''; delete nmDays0.dataset.nmMatchtime;
     document.getElementById('nm-unit').textContent   = '';
     const nmT = document.getElementById('nm-teams');
     nmT.style.flexDirection = 'column'; nmT.style.justifyContent = 'center'; nmT.style.marginTop = '-3rem';
@@ -1530,7 +1531,8 @@ function renderNextMatch() {
       '</span>';
     const nl2 = document.getElementById('nm-league');
     nl2.textContent = ''; nl2.className = 'nm-league';
-    document.getElementById('nm-days').textContent = '';
+    const nmDays2 = document.getElementById('nm-days');
+    nmDays2.textContent = ''; delete nmDays2.dataset.nmMatchtime;
     document.getElementById('nm-unit').textContent = '';
     const nmT2 = document.getElementById('nm-teams');
     nmT2.style.flexDirection = 'column'; nmT2.style.justifyContent = 'center'; nmT2.style.marginTop = '-3rem';
