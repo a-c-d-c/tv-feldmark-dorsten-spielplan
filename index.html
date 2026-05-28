@@ -525,7 +525,11 @@
   /* ── Vollbild-Overlay für alle Views ── */
   #info-view, #detail-view, #report-view, #settings-view {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0; bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 640px;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
