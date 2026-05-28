@@ -1493,6 +1493,7 @@ async function loadAllData() {
 
 /* ── Nächstes Spiel ────────────────────────────────────────── */
 let _homeBlinkTimer = null;
+let _lastDateStr = new Date().toDateString();
 
 function renderNextMatch() {
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -1598,13 +1599,20 @@ function countdownLabel(date, timeStr) {
     const h = Math.floor(diffMs / 3600000);
     const m = Math.floor((diffMs % 3600000) / 60000);
     const s = Math.floor((diffMs % 60000) / 1000);
-    return 'in ' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   }
   if (diffMs > -6 * 3600000) return 'läuft';
   return '';
 }
 
 function updateCountdowns() {
+  const todayStr = new Date().toDateString();
+  if (todayStr !== _lastDateStr) {
+    _lastDateStr = todayStr;
+    renderNextMatch();
+    renderMatches();
+    return;
+  }
   document.querySelectorAll('.card-countdown[data-matchtime]').forEach(el => {
     const mt = new Date(+el.dataset.matchtime);
     const now = new Date();
@@ -1621,7 +1629,7 @@ function updateCountdowns() {
       const h = Math.floor(diffMs / 3600000);
       const m = Math.floor((diffMs % 3600000) / 60000);
       const s = Math.floor((diffMs % 60000) / 1000);
-      txt = 'in ' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      txt = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
     } else if (diffMs > -6 * 3600000) {
       txt = 'läuft'; blink = true;
     }
