@@ -1570,8 +1570,16 @@ function renderNextMatch() {
   const uEl   = document.getElementById('nm-unit');
 
   if (diff === 0) {
-    dEl.textContent = 'HEUTE'; dEl.className = 'nm-days today'; uEl.textContent = '';
+    dEl.className = 'nm-days today';
+    dEl.dataset.nmMatchtime = matchDateTime(next.date, next.timeStr).getTime();
+    uEl.textContent = '';
+    const ms0 = +dEl.dataset.nmMatchtime - Date.now();
+    if (ms0 > 0) {
+      const h0 = Math.floor(ms0/3600000), m0 = Math.floor((ms0%3600000)/60000), s0 = Math.floor((ms0%60000)/1000);
+      dEl.textContent = String(h0).padStart(2,'0')+':'+String(m0).padStart(2,'0')+':'+String(s0).padStart(2,'0');
+    } else { dEl.textContent = 'läuft'; delete dEl.dataset.nmMatchtime; }
   } else {
+    delete dEl.dataset.nmMatchtime;
     dEl.textContent = diff;    dEl.className = 'nm-days';
     uEl.textContent = diff === 1 ? 'Tag' : 'Tage';
   }
@@ -1612,6 +1620,18 @@ function updateCountdowns() {
     renderNextMatch();
     renderMatches();
     return;
+  }
+  // Nächstes-Spiel-Countdown
+  const nmDays = document.getElementById('nm-days');
+  if (nmDays && nmDays.dataset.nmMatchtime) {
+    const ms = +nmDays.dataset.nmMatchtime - Date.now();
+    if (ms > 0) {
+      const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000);
+      nmDays.textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    } else {
+      nmDays.textContent = 'läuft';
+      delete nmDays.dataset.nmMatchtime;
+    }
   }
   document.querySelectorAll('.card-countdown[data-matchtime]').forEach(el => {
     const mt = new Date(+el.dataset.matchtime);
