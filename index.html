@@ -270,6 +270,74 @@
     font-family: inherit;
   }
   #report-tabelle-btn { background: rgba(100,140,220,0.15); border-color: #4a6aaa; color: #8aadd4; }
+  /* ── Spenden-Banner ── */
+  #donate-banner {
+    margin: 0 0 16px;
+    padding: 18px 16px 14px;
+    background: rgba(0, 48, 135, 0.10);
+    border: 1px solid rgba(0, 112, 186, 0.30);
+    border-left: 3px solid #009cde;
+    border-radius: 10px;
+    text-align: center;
+    max-height: 400px;
+    overflow: hidden;
+    transition: opacity 3s ease, max-height 3s ease, padding 3s ease, margin 3s ease, border-width 3s ease;
+  }
+  #main-content { transition: opacity 3s ease; }
+  .donate-logo-row { margin-bottom: 12px; text-align: center; }
+  .donate-logo-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #ffffff;
+    padding: 5px 14px;
+    border-radius: 6px;
+    line-height: 1;
+  }
+  .pp-pay { font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 1.25rem; color: #003087; }
+  .pp-pal { font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 1.25rem; color: #009cde; }
+  .donate-text {
+    margin: 0 0 14px;
+    font-size: 0.85rem;
+    color: #b0b8d8;
+    line-height: 1.5;
+  }
+  .btn-donate-main {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 16px;
+    background: #ffc43a;
+    color: #003087;
+    font-weight: 800;
+    font-size: 0.95rem;
+    font-family: inherit;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-donate-main:active { background: #ffb020; }
+  .btn-donate-later {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background: none;
+    border: 1px solid rgba(144, 149, 176, 0.35);
+    color: #9095b0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 11px 16px;
+    border-radius: 8px;
+    transition: all 0.15s;
+  }
+  @media (hover: hover) {
+    .btn-donate-main:hover { background: #ffb020; }
+    .btn-donate-later:hover { border-color: #9095b0; color: #c8cde4; background: rgba(144,149,176,0.08); }
+  }
   .detail-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.4rem;
@@ -387,14 +455,15 @@
     gap: 8px;
   }
   .card-date {
-    font-size: 0.78rem;
-    color: #9095b0;
+    font-size: 0.85rem;
+    color: #c8cde4;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
+    font-weight: 600;
   }
-  .card-time { font-size: 0.75rem; color: #666a85; margin-left: 4px; }
-  .card-countdown { flex: 1; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; color: #fff; font-weight: 700; white-space: nowrap; }
+  .card-time { font-size: 0.85rem; color: #c8cde4; margin-left: 4px; font-weight: 600; }
+  .card-countdown { flex: 1; display: flex; justify-content: center; align-items: center; font-size: 0.88rem; color: #fff; font-weight: 700; white-space: nowrap; }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
   .blink { animation: blink 1s step-end infinite; }
   .card-countdown.blink { animation: blink 1s step-end infinite; }
@@ -578,6 +647,20 @@
   <p>Spielplan · Ruhrgebiet · Sommer 2026</p>
 </div>
 
+<!-- Spenden-Banner -->
+<div id="donate-banner">
+  <div class="donate-logo-row">
+    <span class="donate-logo-pill">
+      <span class="pp-pay">Pay</span><span class="pp-pal">Pal</span>
+    </span>
+  </div>
+  <p class="donate-text">Diese App ist kostenlos &amp; werbefrei.<br>Wenn sie dir nützlich ist, freue ich mich sehr über eine kleine Unterstützung! ☕</p>
+  <a class="btn-donate-main" href="https://www.paypal.me/AnsgarNitsche/1.50" target="_blank" rel="noopener">☕ Jetzt 1,50 € spenden</a>
+  <button class="btn-donate-later" onclick="closeDonate()">Vielleicht später →</button>
+</div>
+
+<div id="main-content" style="opacity:0;pointer-events:none">
+
 <!-- Nächstes Spiel -->
 <div id="next-match-box" class="next-match-box">
   <div class="nm-label">Nächstes Spiel</div>
@@ -615,11 +698,12 @@
   </div>
 </div>
 
-
 <div id="error-banner"    class="error-msg"  style="display:none"></div>
 <div id="loading-banner"  class="loading-row"><div class="spinner"></div>Spieldaten werden geladen …</div>
 <div id="matches-container"></div>
 <div id="update-info"     class="update-info" style="display:none"></div>
+
+</div><!-- /#main-content -->
 
 <div id="detail-view">
   <div class="detail-header">
@@ -669,6 +753,7 @@ const LS_STATE       = 'feldmark-state';
 const LS_AUSWAHL     = 'feldmark-meine-auswahl';
 const LS_LEAGUES     = 'feldmark-leagues';
 const LS_THEME       = 'feldmark-theme';
+const LS_STARTS      = 'feldmark-starts';
 
 const LIGHT_THEME_CSS = `
   body { background: #f0f2f8; }
@@ -712,6 +797,9 @@ const LIGHT_THEME_CSS = `
     .btn-info:hover, .btn-settings:hover { border-color: #3a4080; color: #1a1d2e; background: rgba(60,70,140,0.18); }
     #info-view .btn-back:hover, #settings-view .btn-back:hover { color: #0f1020; border-color: #3a4080; background: rgba(60,70,140,0.18); }
   }
+  #donate-banner { background: rgba(0,48,135,0.06); border-color: rgba(0,112,186,0.25); }
+  .donate-text { color: #3a4060; }
+  .btn-donate-later { color: #707a9a; }
 `;
 
 let _scrollY = 0;
@@ -728,6 +816,23 @@ function unlockBodyScroll() {
   document.body.style.overflow = '';
   document.body.style.width = '';
   window.scrollTo(0, _scrollY);
+}
+
+function closeDonate() {
+  const b = document.getElementById('donate-banner');
+  const m = document.getElementById('main-content');
+  if (b) {
+    b.style.opacity = '0';
+    b.style.maxHeight = '0';
+    b.style.padding = '0';
+    b.style.margin = '0';
+    b.style.borderWidth = '0';
+    b.style.pointerEvents = 'none';
+  }
+  if (m) {
+    m.style.pointerEvents = '';
+    m.style.opacity = '1';
+  }
 }
 
 function setTheme(theme) {
@@ -1003,6 +1108,18 @@ function loadState() {
 function saveState() {
   localStorage.setItem(LS_STATE, JSON.stringify({ showPast, showFuture, showHome, showAway, showTeams, selectMode }));
 }
+
+/* ── Spenden-Banner: jeden 3. Start anzeigen ────────────────── */
+(function() {
+  const count = (parseInt(localStorage.getItem(LS_STARTS) || '0') + 1);
+  localStorage.setItem(LS_STARTS, count);
+  if (count < 4 || count % 3 !== 1) {
+    const b = document.getElementById('donate-banner');
+    if (b) b.style.display = 'none';
+    const m = document.getElementById('main-content');
+    if (m) { m.style.opacity = '1'; m.style.pointerEvents = ''; }
+  }
+})();
 
 const _state    = loadState();
 let showPast    = _state.showPast;
