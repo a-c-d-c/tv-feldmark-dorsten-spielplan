@@ -185,7 +185,8 @@
   }
   .btn.on    { color: #fff; font-weight: 700; }
 
-  .btn-filter.on { border-color: #9095b0; background: rgba(144,149,176,0.08); }
+  .btn-filter     { box-shadow: 0 3px 8px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.25); }
+  .btn-filter.on  { border-color: #9095b0; background: rgba(144,149,176,0.08); box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); }
   .btn-mannschaften {
     width: 100%;
     padding: 9px;
@@ -208,7 +209,9 @@
   .team-row.visible { background: rgba(15,17,30,0.98); border: 1px solid #3a3f60; border-top: none; border-radius: 0 0 16px 16px; padding: 6px; margin-bottom: 16px; }
   .btn-mannschaften::after { content: ' ▼'; font-size: 0.72em; opacity: 0.6; }
   .btn-mannschaften.on::after { content: ' ▲'; opacity: 1; }
-  .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; }
+  .btn-mannschaften     { box-shadow: 0 3px 8px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.25); }
+  .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); }
+  .mannschaften-wrapper.open .btn-mannschaften { box-shadow: none; }
   .team-row { display: none; }
   .team-row .btn { color: #9095b0; width: 100%; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 13px; font-size: 0.88rem; white-space: normal; }
   .top-btns-row .btn { display: block; text-align: center; justify-content: center; }
