@@ -202,8 +202,9 @@
     user-select: none;
   }
   .mannschaften-wrapper { border-radius: 16px; transition: border-color 0.15s, background 0.15s; }
-  .mannschaften-wrapper.open { background: rgba(15,17,30,0.98); border: 1px solid #3a3f60; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+  .mannschaften-wrapper.open { background: rgba(15,17,30,0.98); border: 1px solid #3a3f60; border-bottom: none; border-radius: 16px 16px 0 0; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
   .mannschaften-wrapper.open .btn-mannschaften { border-color: transparent; background: rgba(144,149,176,0.08); }
+  .team-row.visible { background: rgba(15,17,30,0.98); border: 1px solid #3a3f60; border-top: none; border-radius: 0 0 16px 16px; padding: 6px; margin-bottom: 16px; }
   .btn-mannschaften::after { content: ' ▼'; font-size: 0.72em; opacity: 0.6; }
   .btn-mannschaften.on::after { content: ' ▲'; opacity: 1; }
   .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; }
@@ -845,17 +846,18 @@
       </div>
       <div class="mannschaften-wrapper" id="mannschaften-wrapper">
       <button class="btn-mannschaften" id="btn-mannschaften" onclick="toggleMannschaften()">Mannschaften</button>
-      <div class="team-row" id="team-row">
-        <div class="top-btns-row">
-          <button class="btn btn-select-all"  id="btn-select-all"  onclick="selectAllTeams()">Alle<br>auswählen</button>
-          <button class="btn btn-select-none" id="btn-select-none" onclick="selectNoTeams()">Keine<br>auswählen</button>
-          <button class="btn btn-meine-auswahl" id="btn-meine-auswahl">Meine<br>Auswahl</button>
-        </div>
-        <div id="team-btns-container"></div>
-      </div>
       </div>
     </div>
   </div>
+</div>
+
+<div class="team-row" id="team-row">
+  <div class="top-btns-row">
+    <button class="btn btn-select-all"  id="btn-select-all"  onclick="selectAllTeams()">Alle<br>auswählen</button>
+    <button class="btn btn-select-none" id="btn-select-none" onclick="selectNoTeams()">Keine<br>auswählen</button>
+    <button class="btn btn-meine-auswahl" id="btn-meine-auswahl">Meine<br>Auswahl</button>
+  </div>
+  <div id="team-btns-container"></div>
 </div>
 
 <div id="error-banner"    class="error-msg"  style="display:none"></div>
@@ -942,6 +944,7 @@ const LIGHT_THEME_CSS = `
   .btn-mannschaften.on { color: #1a1d2e; font-weight: 700; border-color: #5060a0; background: #c8cde4; animation: blink 1s step-end infinite; }
   .mannschaften-wrapper.open { background: #eef0f8; border-color: #b0b5cc; }
   .mannschaften-wrapper.open .btn-mannschaften { border-color: transparent; background: rgba(60,70,140,0.07); color: #1a1d2e; }
+  .team-row.visible { background: #eef0f8; border-color: #b0b5cc; }
   .team-row .btn { color: #3a3f60; }
   .btn-close-teams { border-color: #b0b5cc; color: #3a3f60; }
   .btn-select-all  { color: #3a3f60 !important; border-color: #b0b5cc !important; background: transparent !important; }
