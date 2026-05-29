@@ -133,7 +133,7 @@
     line-height: 1;
     color: #8aadd4;
   }
-  .nm-days.today { font-size: 1.5rem; color: #78b890; }
+  .nm-days.today { font-size: 1.8rem; color: #fff; font-weight: 700; }
   .nm-unit {
     font-size: 0.62rem;
     text-transform: uppercase;
@@ -1091,13 +1091,11 @@ function buildTeamCSS(leagues) {
     const btnBg  = `rgba(${r},${g},${b},0.07)`;
     const btnBdr = `rgba(${r},${g},${b},0.28)`;
     const onBg   = toHex(blend(base,[r,g,b],0.32));
-    const isHerren = /herren/i.test(l.label) && !/generali/i.test(l.label);
     return `.btn-${l.team}{border-color:${btnBdr};background:${btnBg};color:${dimText};}` +
            `.btn-${l.team}.on{border-color:${bright};background:${onBg};color:#fff;}` +
            `@media(hover:hover){.team-row .btn-${l.team}:hover{border-color:${btnBdr};background:${btnBg};color:${dimText};}.team-row .btn-${l.team}.on:hover{border-color:${bright};background:${onBg};color:#fff;}}` +
            `.card.${l.team},.next-match-box.${l.team}{background:${cardBg};border-color:${border};}` +
-           `.tag-${l.team}{background:${tagBg};color:#fff;font-weight:700;border:1px solid ${border};}` +
-           (isHerren ? `#next-match-box.${l.team} .nm-days.today{color:#c8cde4;}` : '');
+           `.tag-${l.team}{background:${tagBg};color:#fff;font-weight:700;border:1px solid ${border};}`;
   }).join('\n');
 }
 
