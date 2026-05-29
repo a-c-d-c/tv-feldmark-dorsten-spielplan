@@ -1976,7 +1976,7 @@ function renderMatches() {
       : '';
 
     return divider + `<div class="card ${teamCls}${extra}">
-  <div class="card-tag-row"><span class="tag ${tagCls}" onclick="openMannschaften(event)" style="cursor:pointer">${m.label}</span></div>
+  <div class="card-tag-row"><span class="tag ${tagCls}">${m.label}</span></div>
   <div class="card-top">
     <span class="card-date">${wd} ${m.dateStr}<span class="card-time"> · ${m.timeStr}</span></span>
     ${past ? '' : `<span class="card-countdown" data-matchtime="${matchDateTime(m.date, m.timeStr).getTime()}">${countdownLabel(m.date, m.timeStr)}</span>`}
