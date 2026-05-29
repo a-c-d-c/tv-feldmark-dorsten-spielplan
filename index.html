@@ -283,6 +283,32 @@
     transition: opacity 3s ease, max-height 3s ease, padding 3s ease, margin 3s ease, border-width 3s ease;
   }
   #main-content { transition: opacity 3s ease; }
+  #pwa-hint-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: rgba(0, 112, 186, 0.12);
+    border: 1px solid rgba(0, 112, 186, 0.28);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    color: #c8cde4;
+  }
+  .pwa-hint-link {
+    background: none; border: none;
+    color: #8aadd4; font-weight: 700;
+    cursor: pointer; padding: 0;
+    font-size: inherit; font-family: inherit;
+    text-decoration: underline;
+  }
+  .pwa-hint-close {
+    background: none; border: none;
+    color: #9095b0; cursor: pointer;
+    font-size: 1.1rem; padding: 0;
+    flex-shrink: 0; line-height: 1;
+  }
   .donate-logo-row { margin-bottom: 12px; text-align: center; }
   .donate-logo-pill {
     display: inline-flex;
@@ -717,6 +743,12 @@
 
 <div id="main-content" style="opacity:0;pointer-events:none">
 
+<!-- Homescreen-Hinweis (nur im Browser auf Mobilgeräten) -->
+<div id="pwa-hint-banner" style="display:none">
+  <span>Zum Homescreen hinzufügen für die beste Erfahrung – <button class="pwa-hint-link" onclick="showInfo()">Anleitung unter Info</button></span>
+  <button class="pwa-hint-close" onclick="dismissPwaHint()" title="Schließen">✕</button>
+</div>
+
 <!-- Nächstes Spiel -->
 <div id="next-match-box" class="next-match-box">
   <div class="nm-label">Nächstes Spiel</div>
@@ -868,6 +900,9 @@ const LIGHT_THEME_CSS = `
   .donate-custom-euro { color: #5a6090; }
   #info-donate { background: rgba(0,48,135,0.06); border-color: rgba(0,112,186,0.25); }
   #donate-custom-input-info { background: rgba(255,255,255,0.7); color: #1a1d2e; border-color: rgba(0,112,186,0.4); }
+  #pwa-hint-banner { background: rgba(0,112,186,0.08); border-color: rgba(0,112,186,0.22); color: #2a3060; }
+  .pwa-hint-link { color: #0070ba; }
+  .pwa-hint-close { color: #6a7090; }
 `;
 
 let _scrollY = 0;
@@ -1279,6 +1314,22 @@ const DONATE_TEXTS = [
     if (el) el.innerHTML = DONATE_TEXTS[idx].replace(/\n/g, '<br>');
   }
 })();
+
+(function() {
+  const isStandalone = window.navigator.standalone === true ||
+                       window.matchMedia('(display-mode: standalone)').matches;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile && !isStandalone && !localStorage.getItem('pwa-hint')) {
+    const b = document.getElementById('pwa-hint-banner');
+    if (b) b.style.display = 'flex';
+  }
+})();
+
+function dismissPwaHint() {
+  localStorage.setItem('pwa-hint', '1');
+  const b = document.getElementById('pwa-hint-banner');
+  if (b) b.style.display = 'none';
+}
 
 const _state    = loadState();
 let showPast    = _state.showPast;
