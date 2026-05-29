@@ -502,10 +502,11 @@
   .detail-schedule-vs      { color: #9095b0; font-size: 0.75rem; margin: 0 4px; flex-shrink: 0; }
   .detail-schedule-row.club-match { background: rgba(255,255,255,0.04); border-radius: 5px; margin: 0 -6px; padding-left: 6px; padding-right: 6px; }
   .detail-schedule-result { flex-shrink: 0; font-weight: 700; font-size: 0.9rem; }
-  .detail-schedule-result.win  { color: #78b890; }
-  .detail-schedule-result.loss { color: #b87070; }
-  .detail-schedule-result.draw { color: #d4b84a; }
-  .detail-schedule-result.open { color: #555a7a; font-style: italic; font-weight: 400; }
+  .detail-schedule-result.win     { color: #28a856; }
+  .detail-schedule-result.loss    { color: #e03838; }
+  .detail-schedule-result.draw    { color: #d4a000; }
+  .detail-schedule-result.open    { color: #555a7a; font-style: italic; font-weight: 400; }
+  .detail-schedule-result.neutral { color: #9095b0; font-weight: 400; }
   button.detail-schedule-result { background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
 
   /* ── Report-View ── */
@@ -531,9 +532,9 @@
     color: #8aadd4;
     margin: 4px 0 2px;
   }
-  .report-result.win  { color: #78b890; }
-  .report-result.loss { color: #b87070; }
-  .report-result.draw { color: #d4b84a; }
+  .report-result.win  { color: #28a856; }
+  .report-result.loss { color: #e03838; }
+  .report-result.draw { color: #d4a000; }
   .report-date { font-size: 0.78rem; color: #9095b0; }
   .report-section {
     font-family: 'Bebas Neue', sans-serif;
@@ -576,9 +577,9 @@
   .report-table td:nth-child(4) { text-align: left; color: #e8eaf0; }
   .report-table tr.total-row td { color: #fff; font-weight: 700; border-top: 1px solid #3a3f5c; border-bottom: none; text-align: center; }
   .report-table tr.club-player td { color: #fff; }
-  .set-win  { color: #82c9a0; font-weight: 600; }
-  .set-loss { color: #c47c7c; }
-  .set-draw { color: #d4b84a; font-weight: 600; }
+  .set-win  { color: #28a856; font-weight: 600; }
+  .set-loss { color: #e03838; }
+  .set-draw { color: #d4a000; font-weight: 600; }
 
   .card-tag-row {
     text-align: center;
@@ -2076,7 +2077,7 @@ function showTable(team) {
           resultEl = `<span class="detail-schedule-result ${cls}">${esc(txt)}</span>`;
         }
       } else {
-        resultEl = `<span class="detail-schedule-result">${esc(txt)}</span>`;
+        resultEl = `<span class="detail-schedule-result neutral">${esc(txt)}</span>`;
       }
     }
     const rowCls = m.isClubMatch ? ' club-match' : '';
