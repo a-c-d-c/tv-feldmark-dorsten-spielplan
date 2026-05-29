@@ -1178,7 +1178,9 @@ function parseClubTeams(html) {
     const label    = m[1].trim();
     const relHref  = m[2];
     const group    = m[3];
-    const sublabel = m[4].trim().replace(/\s+Gr\.\s*\d+.*$/i, '').trim();
+    const fullSub  = m[4].trim().replace(/\s+Gr\.\s*\d+.*$/i, '').trim();
+    const liPart   = fullSub.match(/((?:Kreis|Bezirks|Münsterland|Verbands|Landes|Westfalen|Generali)\S*.*)/i);
+    const sublabel = liPart ? liPart[1].trim() : fullSub;
     if (seenGroups.has(group)) continue;
     seenGroups.add(group);
     const url = relHref.startsWith('http') ? relHref : 'https://wtv.liga.nu' + relHref;
