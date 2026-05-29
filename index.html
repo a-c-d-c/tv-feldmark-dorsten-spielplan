@@ -288,13 +288,14 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    background: rgba(0, 112, 186, 0.12);
-    border: 1px solid rgba(0, 112, 186, 0.28);
+    background: rgba(0, 112, 186, 0.18);
+    border: 1px solid rgba(0, 112, 186, 0.40);
     border-radius: 10px;
-    padding: 10px 14px;
+    padding: 13px 16px;
     margin-bottom: 14px;
-    font-size: 0.82rem;
-    color: #c8cde4;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #e0e4f4;
   }
   .pwa-hint-link {
     background: none; border: none;
@@ -745,7 +746,7 @@
 
 <!-- Homescreen-Hinweis (nur im Browser auf Mobilgeräten) -->
 <div id="pwa-hint-banner" style="display:none">
-  <span>Zum Homescreen hinzufügen für die beste Erfahrung – <button class="pwa-hint-link" onclick="showInfo()">Anleitung unter Info</button></span>
+  <span>Als App zum Homescreen hinzufügen – <button class="pwa-hint-link" onclick="showInfo('acc-homescreen')">Anleitung unter Info</button></span>
   <button class="pwa-hint-close" onclick="dismissPwaHint()" title="Schließen">✕</button>
 </div>
 
@@ -1951,7 +1952,7 @@ function backToList() {
   renderNextMatch();
 }
 
-async function showInfo() {
+async function showInfo(openAccordion) {
   if (document.getElementById('info-view').style.display === 'block') { backToList(); return; }
   document.getElementById('matches-container').style.display = 'none';
   document.getElementById('update-info').style.display = 'none';
@@ -1976,6 +1977,7 @@ async function showInfo() {
     const html = await res.text();
     const m = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
     el.innerHTML = m ? m[1] : html;
+    if (openAccordion) toggleAccordion(openAccordion);
   } catch(e) {
     el.innerHTML = '<p style="color:#b87070">Info-Seite konnte nicht geladen werden.</p>';
   }
