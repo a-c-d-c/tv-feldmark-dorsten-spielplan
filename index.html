@@ -1183,6 +1183,16 @@ function parseClubTeams(html) {
     const url = relHref.startsWith('http') ? relHref : 'https://wtv.liga.nu' + relHref;
     results.push({ team: 'g' + group, label, url, color: [128, 128, 128] });
   }
+  // Doppelte Labels nummerieren: "Junioren U15 Classic" → "… 1", "… 2", "… 3"
+  const labelCount = {};
+  results.forEach(r => { labelCount[r.label] = (labelCount[r.label] || 0) + 1; });
+  const labelSeen = {};
+  results.forEach(r => {
+    if (labelCount[r.label] > 1) {
+      labelSeen[r.label] = (labelSeen[r.label] || 0) + 1;
+      r.label = r.label + ' ' + labelSeen[r.label];
+    }
+  });
   return results;
 }
 
