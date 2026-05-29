@@ -392,6 +392,30 @@
     color: #fff;
   }
   .info-theme-row { margin-left: auto; display: flex; gap: 8px; }
+  #info-donate {
+    margin: 28px 0 0;
+    padding: 18px 16px 14px;
+    background: rgba(0, 48, 135, 0.10);
+    border: 1px solid rgba(0, 112, 186, 0.30);
+    border-left: 3px solid #009cde;
+    border-radius: 0 8px 8px 0;
+    text-align: center;
+  }
+  #donate-custom-input-info {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 112, 186, 0.35);
+    background: rgba(0, 0, 0, 0.2);
+    color: #e8eaf0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  #donate-custom-input-info::-webkit-outer-spin-button,
+  #donate-custom-input-info::-webkit-inner-spin-button { -webkit-appearance: none; }
   #detail-table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .standings-table {
     min-width: 480px;
@@ -789,6 +813,25 @@
     </div>
   </div>
   <div class="info-content" id="info-content"></div>
+  <div id="info-donate">
+    <div class="donate-logo-row">
+      <span class="donate-logo-pill">
+        <span class="pp-pay">Pay</span><span class="pp-pal">Pal</span>
+      </span>
+    </div>
+    <p class="donate-text">Diese App ist kostenlos &amp; werbefrei.<br>
+    Wenn sie dir nützlich ist, freue ich mich sehr über eine kleine Unterstützung! ☕</p>
+    <div class="donate-amounts">
+      <button class="btn-amount"    onclick="setDonateAmountInfo(1.50, this)">1,50 €</button>
+      <button class="btn-amount on" onclick="setDonateAmountInfo(2.50, this)">2,50 €</button>
+      <button class="btn-amount"    onclick="setDonateAmountInfo('custom', this)">Anderer Betrag</button>
+    </div>
+    <div class="donate-custom-row" id="donate-custom-row-info">
+      <input type="number" id="donate-custom-input-info" min="0.50" step="0.50" placeholder="0,00" oninput="updateDonateBtnInfo()">
+      <span class="donate-custom-euro">€</span>
+    </div>
+    <a class="btn-donate-main" id="btn-donate-main-info" href="https://www.paypal.me/AnsgarNitsche/2.50" target="_blank" rel="noopener">☕ Jetzt 2,50 € spenden</a>
+  </div>
 </div>
 
 <div id="settings-view">
@@ -866,8 +909,6 @@ const LIGHT_THEME_CSS = `
   #donate-custom-input { background: rgba(255,255,255,0.7); color: #1a1d2e; border-color: rgba(0,112,186,0.4); }
   .donate-custom-euro { color: #5a6090; }
   #info-donate { background: rgba(0,48,135,0.06); border-color: rgba(0,112,186,0.25); }
-  .btn-amount-info { color: #5a6090; }
-  .btn-amount-info.on { color: #0060a0; border-color: #0070ba; background: rgba(0,112,186,0.12); }
   #donate-custom-input-info { background: rgba(255,255,255,0.7); color: #1a1d2e; border-color: rgba(0,112,186,0.4); }
 `;
 
@@ -960,7 +1001,7 @@ let _donateAmountInfo = 2.50;
 let _donateCustomInfo = false;
 
 function setDonateAmountInfo(val, btn) {
-  document.querySelectorAll('#info-donate .btn-amount-info').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('#info-donate .btn-amount').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   const customRow = document.getElementById('donate-custom-row-info');
   if (val === 'custom') {
@@ -1934,6 +1975,12 @@ async function showInfo() {
   document.getElementById('loading-banner').style.display = 'none';
   lockBodyScroll();
   document.getElementById('info-view').style.display = 'block';
+  _donateAmountInfo = 2.50;
+  _donateCustomInfo = false;
+  document.querySelectorAll('#info-donate .btn-amount').forEach((b, i) => b.classList.toggle('on', i === 1));
+  const cr = document.getElementById('donate-custom-row-info');
+  if (cr) cr.style.display = 'none';
+  updateDonateBtnInfo();
   const el = document.getElementById('info-content');
   try {
     const res = await fetch('./info.html?v=' + Date.now());
@@ -1941,8 +1988,6 @@ async function showInfo() {
     const html = await res.text();
     const m = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
     el.innerHTML = m ? m[1] : html;
-    _donateAmountInfo = 2.50;
-    _donateCustomInfo = false;
   } catch(e) {
     el.innerHTML = '<p style="color:#b87070">Info-Seite konnte nicht geladen werden.</p>';
   }

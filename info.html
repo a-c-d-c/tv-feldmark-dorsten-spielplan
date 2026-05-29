@@ -50,50 +50,6 @@
   .acc-feature-list { list-style: none; padding: 0; margin: 0; }
   .acc-feature-list li { margin-bottom: 10px; }
   .acc-feature-label { font-weight: 700; }
-
-  #info-donate {
-    margin: 28px 0 0;
-    padding: 18px 16px 14px;
-    background: rgba(0, 48, 135, 0.10);
-    border: 1px solid rgba(0, 112, 186, 0.30);
-    border-left: 3px solid #009cde;
-    border-radius: 0 8px 8px 0;
-    text-align: center;
-  }
-  .btn-amount-info {
-    flex: 1;
-    padding: 9px 6px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 112, 186, 0.35);
-    background: none;
-    color: #9095b0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .btn-amount-info.on {
-    background: rgba(0, 112, 186, 0.20);
-    border-color: #0070ba;
-    color: #4db3f0;
-  }
-  #donate-custom-input-info {
-    flex: 1;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 112, 186, 0.35);
-    background: rgba(0, 0, 0, 0.2);
-    color: #e8eaf0;
-    font-size: 0.95rem;
-    font-family: inherit;
-    text-align: center;
-    outline: none;
-    -moz-appearance: textfield;
-  }
-  #donate-custom-input-info::-webkit-outer-spin-button,
-  #donate-custom-input-info::-webkit-inner-spin-button { -webkit-appearance: none; }
 </style>
 
 <div class="accordion-item">
@@ -159,26 +115,6 @@
       </ol>
     </div>
   </div>
-</div>
-
-<div id="info-donate">
-  <div class="donate-logo-row">
-    <span class="donate-logo-pill">
-      <span class="pp-pay">Pay</span><span class="pp-pal">Pal</span>
-    </span>
-  </div>
-  <p class="donate-text">Diese App ist kostenlos &amp; werbefrei.<br>
-  Wenn sie dir nützlich ist, freue ich mich sehr über eine kleine Unterstützung! ☕</p>
-  <div class="donate-amounts">
-    <button class="btn-amount-info"    onclick="setDonateAmountInfo(1.50, this)">1,50 €</button>
-    <button class="btn-amount-info on" onclick="setDonateAmountInfo(2.50, this)">2,50 €</button>
-    <button class="btn-amount-info"    onclick="setDonateAmountInfo('custom', this)">Anderer Betrag</button>
-  </div>
-  <div class="donate-custom-row" id="donate-custom-row-info">
-    <input type="number" id="donate-custom-input-info" min="0.50" step="0.50" placeholder="0,00" oninput="updateDonateBtnInfo()">
-    <span class="donate-custom-euro">€</span>
-  </div>
-  <a class="btn-donate-main" id="btn-donate-main-info" href="https://www.paypal.me/AnsgarNitsche/2.50" target="_blank" rel="noopener">☕ Jetzt 2,50 € spenden</a>
 </div>
 
 </body>
