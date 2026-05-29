@@ -185,8 +185,7 @@
   }
   .btn.on    { color: #fff; font-weight: 700; }
 
-  .btn-filter     { box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4); }
-  .btn-filter.on  { border-color: #9095b0; background: rgba(144,149,176,0.08); box-shadow: inset 0 3px 7px rgba(0,0,0,0.55); }
+  .btn-filter.on  { border-color: #9095b0; background: rgba(144,149,176,0.08); }
   .btn-mannschaften {
     width: 100%;
     padding: 9px;
@@ -209,14 +208,12 @@
   .team-row.visible { background: rgba(15,17,30,0.98); border: 1px solid #3a3f60; border-top: none; border-radius: 0 0 16px 16px; padding: 6px; margin-bottom: 16px; }
   .btn-mannschaften::after { content: ' ▼'; font-size: 0.72em; opacity: 0.6; }
   .btn-mannschaften.on::after { content: ' ▲'; opacity: 1; }
-  .btn-mannschaften     { box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4); }
-  .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; box-shadow: inset 0 3px 7px rgba(0,0,0,0.55); }
-  .mannschaften-wrapper.open .btn-mannschaften { box-shadow: none; }
+  .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; }
   .team-row { display: none; }
-  .team-row .btn { color: #9095b0; width: 100%; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 13px; font-size: 0.88rem; white-space: normal; box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4); }
+  .team-row .btn { color: #9095b0; width: 100%; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 13px; font-size: 0.88rem; white-space: normal; }
   .top-btns-row .btn { display: block; text-align: center; justify-content: center; }
   .team-btn-rank { font-size: 0.75rem; opacity: 0.7; white-space: nowrap; margin-left: 8px; flex-shrink: 0; cursor: pointer; text-decoration: underline dotted; }
-  .team-row .btn.on { color: #fff; box-shadow: inset 0 3px 7px rgba(0,0,0,0.55); }
+  .team-row .btn.on { color: #fff; }
   .team-row.visible { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
   #team-btns-container { display: flex; flex-direction: column; gap: 8px; }
   .btn-close-teams { background: transparent; border: 1px solid #2e3150; border-radius: 20px; color: #555a7a; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; font-weight: 600; padding: 7px 0; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; width: 100%; margin-top: 4px; transition: all 0.15s; }
