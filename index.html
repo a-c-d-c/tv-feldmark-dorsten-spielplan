@@ -1320,14 +1320,13 @@ const DONATE_TEXTS = [
   const isStandalone = window.navigator.standalone === true ||
                        window.matchMedia('(display-mode: standalone)').matches;
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile && !isStandalone && !localStorage.getItem('pwa-hint')) {
+  if (isMobile && !isStandalone) {
     const b = document.getElementById('pwa-hint-banner');
     if (b) b.style.display = 'flex';
   }
 })();
 
 function dismissPwaHint() {
-  localStorage.setItem('pwa-hint', '1');
   const b = document.getElementById('pwa-hint-banner');
   if (b) b.style.display = 'none';
 }
