@@ -23,7 +23,7 @@
     margin: 0 auto;
   }
 
-  .header { text-align: center; margin-bottom: 20px; position: relative; }
+  .header { text-align: center; margin-bottom: 20px; position: sticky; top: 0; z-index: 5; background: #0f1117; }
   .header-title { display: flex; align-items: center; justify-content: center; gap: 12px; }
   .btn-info {
     position: absolute; top: 0; right: 0;
@@ -292,7 +292,7 @@
   }
   #main-content { transition: opacity 3s ease; }
   #matches-container { transition: opacity 2s ease; }
-  #controls-slider { overflow: hidden; margin-bottom: 16px; }
+  #controls-slider { overflow: hidden; margin-bottom: 16px; position: sticky; top: var(--header-h, 90px); z-index: 4; background: #0f1117; }
   #controls-inner {
     display: flex;
     transform: translateX(-100%);
@@ -923,6 +923,8 @@ const LS_STARTS      = 'feldmark-starts';
 
 const LIGHT_THEME_CSS = `
   body { background: #f0f2f8; }
+  .header { background: #f0f2f8; }
+  #controls-slider { background: #f0f2f8; }
   .header h1 { color: #1a1d2e; }
   .header p { color: #5a5f7a; }
   .nm-label { color: #fff; }
@@ -2505,7 +2507,17 @@ function toggleMeineAuswahlMode() {
 })();
 
 /* ── Start ─────────────────────────────────────────────────── */
+function updateHeaderH() {
+  const h = document.querySelector('.header');
+  if (!h) return;
+  const mb = parseFloat(window.getComputedStyle(h).marginBottom) || 0;
+  document.documentElement.style.setProperty('--header-h', (h.offsetHeight + mb) + 'px');
+}
+
 setTheme(localStorage.getItem(LS_THEME) || 'light');
+updateHeaderH();
+document.fonts.ready.then(updateHeaderH);
+window.addEventListener('resize', updateHeaderH);
 (async function startup() {
   await initLeagues();
   await loadAllData();
