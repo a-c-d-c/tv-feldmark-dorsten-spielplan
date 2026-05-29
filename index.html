@@ -419,11 +419,38 @@
     .btn-donate-later:hover { border-color: #9095b0; color: #c8cde4; background: rgba(144,149,176,0.08); }
     .btn-amount:hover { border-color: #0070ba; color: #c8cde4; }
   }
-  .detail-title {
+  .detail-title { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .detail-title-label {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     letter-spacing: 0.06em;
     color: #fff;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .detail-title-sub {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #9095b0;
+    margin-top: 2px;
+  }
+  .detail-title-suffix { display: none; }
+  @media (min-width: 481px) {
+    .detail-title { flex-direction: row; align-items: baseline; }
+    .detail-title-label { font-size: 1.3rem; flex: 1; min-width: 0; }
+    .detail-title-sub { display: none; }
+    .detail-title-suffix {
+      display: inline;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      color: #9095b0;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
   }
   .info-theme-row { margin-left: auto; display: flex; gap: 8px; }
   #info-donate {
@@ -2053,7 +2080,10 @@ function showTable(team) {
   }
   tableHtml += '</tbody></table>';
 
-  document.getElementById('detail-title').textContent = league.label + ' – Tabelle';
+  document.getElementById('detail-title').innerHTML =
+    `<span class="detail-title-label">${esc(league.label)}</span>` +
+    `<span class="detail-title-sub">Tabelle · Spielplan</span>` +
+    `<span class="detail-title-suffix"> – Tabelle · Spielplan</span>`;
   document.getElementById('detail-table-container').innerHTML = tableHtml;
 
   // Alle Spiele der Gruppe (kompletter Gruppenspielplan)
