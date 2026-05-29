@@ -923,7 +923,7 @@ const CLUB_NAME      = 'Feldmark';
 const CLUB_TEAMS_URL = 'https://wtv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/clubTeams?club=25977';
 const LS_STATE       = 'feldmark-state';
 const LS_AUSWAHL     = 'feldmark-meine-auswahl';
-const LS_LEAGUES     = 'feldmark-leagues-v3';
+const LS_LEAGUES     = 'feldmark-leagues-v5';
 const LS_THEME       = 'feldmark-theme';
 const LS_STARTS      = 'feldmark-starts';
 
@@ -1178,13 +1178,13 @@ function parseClubTeams(html) {
     const label    = m[1].trim();
     const relHref  = m[2];
     const group    = m[3];
-    const fullSub  = m[4].trim().replace(/\s+Gr\.\s*\d+.*$/i, '').trim();
-    const liPart   = fullSub.match(/((?:Kreis|Bezirks|Münsterland|Verbands|Landes|Westfalen|Generali)\S*.*)/i);
-    const sublabel = liPart ? liPart[1].trim() : fullSub;
+    const leagueLabel = m[4].trim().replace(/\s+Gr\.\s*\d+.*$/i, '').trim();
+    const liPart      = leagueLabel.match(/((?:Kreis|Bezirks|Münsterland|Verbands|Landes|Westfalen|Generali)\S*.*)/i);
+    const sublabel    = liPart ? liPart[1].trim() : leagueLabel;
     if (seenGroups.has(group)) continue;
     seenGroups.add(group);
     const url = relHref.startsWith('http') ? relHref : 'https://wtv.liga.nu' + relHref;
-    results.push({ team: 'g' + group, label, sublabel, url, color: [128, 128, 128] });
+    results.push({ team: 'g' + group, label, sublabel, leagueLabel, url, color: [128, 128, 128] });
   }
   return results;
 }
@@ -1555,7 +1555,7 @@ function parseLeague(html, league) {
       homeTeam, awayTeam, result, note, reportUrl,
       isHome: homeTeam.includes(CLUB_NAME),
       team:   league.team,
-      label:  league.label
+      label:  league.leagueLabel || league.label
     });
   }
 
@@ -1628,7 +1628,7 @@ function parseLeagueAll(html, league) {
       homeTeam, awayTeam, result, reportUrl,
       isHome: isClubHome,
       isClubMatch: isClubHome || isClubAway,
-      team: league.team, label: league.label
+      team: league.team, label: league.leagueLabel || league.label
     });
   }
   return matches;
