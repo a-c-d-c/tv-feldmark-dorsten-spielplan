@@ -891,9 +891,8 @@
   <div class="detail-header">
     <button class="btn-back" onclick="backToList()">← Zurück</button>
     <div class="info-theme-row">
-      <button class="btn btn-filter" id="btn-info-theme-dark"    onclick="setTheme('dark')">Dunkel</button>
-      <button class="btn btn-filter" id="btn-info-theme-light"   onclick="setTheme('light')">Hell</button>
-      <button class="btn btn-filter" id="btn-info-theme-pastell" onclick="setTheme('pastell')">Mono</button>
+      <button class="btn btn-filter" id="btn-info-theme-dark"  onclick="setTheme('dark')">Dunkel</button>
+      <button class="btn btn-filter" id="btn-info-theme-light" onclick="setTheme('light')">Hell</button>
     </div>
   </div>
   <div class="info-content" id="info-content"></div>
@@ -972,58 +971,6 @@ const LIGHT_THEME_CSS = `
   #pwa-hint-banner { background: rgba(0,112,186,0.08); border-color: rgba(0,112,186,0.22); color: #2a3060; }
   .pwa-hint-link { color: #0070ba; }
   .pwa-hint-close { color: #6a7090; }
-`;
-
-const PASTELL_THEME_CSS = `
-  html, body { background: #f0f0f0; }
-  .header { background: #f0f0f0; }
-  #controls-slider { background: #f0f0f0; }
-  .header h1 { color: #1a1a1a; }
-  .header p { color: #707070; }
-  .btn-info { border-color: #c0c0c0; color: #707070; background: rgba(0,0,0,0.04); }
-  .nm-label { color: #808080; border-color: #c8c8c8; }
-  .nm-days { color: #484848; }
-  .nm-unit { color: #888888; }
-  .nm-date { color: #707070; }
-  .nm-league { color: #808080; border-color: #c8c8c8; }
-  .next-match-box.no-match { background: #e4e4e4; border-color: #b8b8b8; color: #1a1a1a; }
-  .next-match-box.no-match .nm-label { color: #1a1a1a; }
-  .btn-filter { border-color: #c0c0c0; color: #707070; }
-  .btn-filter.on { color: #1a1a1a; font-weight: 700; border-color: #606060; background: rgba(0,0,0,0.08); }
-  .btn-mannschaften { color: #707070; border-color: #c0c0c0; }
-  .btn-mannschaften.on { color: #1a1a1a; font-weight: 700; border-color: #606060; background: rgba(0,0,0,0.08); animation: blink 1s step-end infinite; }
-  .mannschaften-wrapper.open { background: #e8e8e8; border-color: #c0c0c0; }
-  .mannschaften-wrapper.open .btn-mannschaften { border-color: transparent; background: rgba(0,0,0,0.04); color: #1a1a1a; }
-  .team-row.visible { background: #e8e8e8; border-color: #c0c0c0; }
-  .team-row .btn { color: #707070; }
-  .btn-close-teams { border-color: #c0c0c0; color: #888888; }
-  .btn-select-all  { color: #707070 !important; border-color: #c0c0c0 !important; background: transparent !important; }
-  .btn-select-all.on  { color: #1a1a1a !important; font-weight: 700 !important; border-color: #606060 !important; background: rgba(0,0,0,0.08) !important; }
-  .btn-select-none { color: #707070 !important; border-color: #c0c0c0 !important; background: transparent !important; }
-  .btn-select-none.on { color: #1a1a1a !important; font-weight: 700 !important; border-color: #606060 !important; background: rgba(0,0,0,0.08) !important; }
-  .btn-meine-auswahl { color: #707070 !important; border-color: #c0c0c0 !important; background: transparent !important; }
-  .btn-meine-auswahl.on { color: #1a1a1a !important; font-weight: 700 !important; border-color: #606060 !important; background: rgba(0,0,0,0.08) !important; }
-  .card { background: #e8e8e8; border-color: #d0d0d0; color: #1a1a1a; }
-  .card-time { color: #888888; }
-  .card-countdown { color: #888888; }
-  .result.open { color: #909090; }
-  #info-view { background: #f0f0f0; }
-  #info-view .btn-back { color: #1a1a1a; border-color: #c0c0c0; background: rgba(0,0,0,0.04); }
-  .info-content { color: #2a2a2a; }
-  .info-content h2 { color: #1a1a1a; }
-  #donate-banner { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.12); }
-  .donate-text { color: #484848; }
-  .btn-donate-later { color: #888888; }
-  .btn-amount { color: #707070; }
-  .btn-amount.on { color: #1a1a1a; border-color: #606060; background: rgba(0,0,0,0.08); }
-  #donate-custom-input { background: rgba(255,255,255,0.8); color: #1a1a1a; border-color: rgba(0,0,0,0.25); }
-  .donate-custom-euro { color: #707070; }
-  #info-donate { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.12); }
-  #donate-custom-input-info { background: rgba(255,255,255,0.8); color: #1a1a1a; border-color: rgba(0,0,0,0.25); }
-  #pwa-hint-banner { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.14); color: #606060; }
-  .pwa-hint-link { color: #404040; }
-  .pwa-hint-close { color: #909090; }
-  .update-info { color: #909090; }
 `;
 
 let _scrollY = 0;
@@ -1151,18 +1098,13 @@ function updateDonateBtnInfo() {
 }
 
 function setTheme(theme) {
-  let css = '';
-  if (theme === 'light')   css = LIGHT_THEME_CSS;
-  if (theme === 'pastell') css = PASTELL_THEME_CSS;
-  document.getElementById('theme-override-css').textContent = css;
-  const themeColors = { dark: '#0f1117', light: '#f0f2f8', pastell: '#f0f0f0' };
-  document.querySelector('meta[name="theme-color"]').content = themeColors[theme] || '#0f1117';
-  const btnDark    = document.getElementById('btn-info-theme-dark');
-  const btnLight   = document.getElementById('btn-info-theme-light');
-  const btnPastell = document.getElementById('btn-info-theme-pastell');
-  if (btnDark)    btnDark.classList.toggle('on',    theme === 'dark');
-  if (btnLight)   btnLight.classList.toggle('on',   theme === 'light');
-  if (btnPastell) btnPastell.classList.toggle('on', theme === 'pastell');
+  const isLight = theme === 'light';
+  document.getElementById('theme-override-css').textContent = isLight ? LIGHT_THEME_CSS : '';
+  document.querySelector('meta[name="theme-color"]').content = isLight ? '#f0f2f8' : '#0f1117';
+  const btnDark  = document.getElementById('btn-info-theme-dark');
+  const btnLight = document.getElementById('btn-info-theme-light');
+  if (btnDark)  btnDark.classList.toggle('on',  !isLight);
+  if (btnLight) btnLight.classList.toggle('on',  isLight);
   localStorage.setItem(LS_THEME, theme);
 }
 
@@ -1262,22 +1204,6 @@ function buildTeamCSS(leagues) {
            `.card.${l.team},.next-match-box.${l.team}{background:${cardBg};border-color:${border};}` +
            `.tag-${l.team}{background:${tagBg};color:#fff;font-weight:700;border:1px solid ${border};}`;
   }).join('\n');
-}
-
-function buildTeamCSSPastell(leagues) {
-  return leagues.map(l =>
-    `.btn-${l.team}{border-color:#c0c0c0;background:rgba(0,0,0,0.03);color:#707070;}` +
-    `.btn-${l.team}.on{border-color:#606060;background:rgba(0,0,0,0.08);color:#1a1a1a;font-weight:700;}` +
-    `.card.${l.team},.next-match-box.${l.team}{background:#e8e8e8;border-color:#d0d0d0;color:#1a1a1a;}` +
-    `.tag-${l.team}{background:#d8d8d8;color:#484848;font-weight:700;border:1px solid #b8b8b8;}`
-  ).join('\n');
-}
-
-function rebuildTeamCSS() {
-  if (!LEAGUES.length) return;
-  const theme = localStorage.getItem(LS_THEME) || 'dark';
-  document.getElementById('dynamic-team-css').textContent =
-    theme === 'pastell' ? buildTeamCSSPastell(LEAGUES) : buildTeamCSS(LEAGUES);
 }
 
 function formatTeamLabel(label) {
@@ -1395,7 +1321,7 @@ function applyLeagues() {
   spreadColors(LEAGUES.filter(gemischtAdult),               PALETTE_GEMISCHT);
   LEAGUES.filter(l => !isJugend(l.label) && !/damen|herren/i.test(l.label) && !gemischtAdult(l))
          .forEach(l => l.color = PALETTE_JUGEND[0]);
-  rebuildTeamCSS();
+  document.getElementById('dynamic-team-css').textContent = buildTeamCSS(LEAGUES);
   LEAGUES.forEach(l => { if (showTeams[l.team] === undefined) showTeams[l.team] = true; });
   buildTeamButtons();
   applyStateToButtons();
