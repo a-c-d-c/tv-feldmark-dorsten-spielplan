@@ -185,8 +185,8 @@
   }
   .btn.on    { color: #fff; font-weight: 700; }
 
-  .btn-filter     { box-shadow: 0 3px 8px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.25); }
-  .btn-filter.on  { border-color: #9095b0; background: rgba(144,149,176,0.08); box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); }
+  .btn-filter     { box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4); }
+  .btn-filter.on  { border-color: #9095b0; background: rgba(144,149,176,0.08); box-shadow: inset 0 3px 7px rgba(0,0,0,0.55); }
   .btn-mannschaften {
     width: 100%;
     padding: 9px;
@@ -209,15 +209,16 @@
   .team-row.visible { background: rgba(15,17,30,0.98); border: 1px solid #3a3f60; border-top: none; border-radius: 0 0 16px 16px; padding: 6px; margin-bottom: 16px; }
   .btn-mannschaften::after { content: ' ▼'; font-size: 0.72em; opacity: 0.6; }
   .btn-mannschaften.on::after { content: ' ▲'; opacity: 1; }
-  .btn-mannschaften     { box-shadow: 0 3px 8px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.25); }
-  .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); }
+  .btn-mannschaften     { box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4); }
+  .btn-mannschaften.on { color: #fff; font-weight: 700; border-color: #9095b0; background: rgba(144,149,176,0.08); animation: blink 1s step-end infinite; box-shadow: inset 0 3px 7px rgba(0,0,0,0.55); }
   .mannschaften-wrapper.open .btn-mannschaften { box-shadow: none; }
   .team-row { display: none; }
-  .team-row .btn { color: #9095b0; width: 100%; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 13px; font-size: 0.88rem; white-space: normal; }
+  .team-row .btn { color: #9095b0; width: 100%; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 13px; font-size: 0.88rem; white-space: normal; box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4); }
   .top-btns-row .btn { display: block; text-align: center; justify-content: center; }
   .team-btn-rank { font-size: 0.75rem; opacity: 0.7; white-space: nowrap; margin-left: 8px; flex-shrink: 0; cursor: pointer; text-decoration: underline dotted; }
-  .team-row .btn.on { color: #fff; }
+  .team-row .btn.on { color: #fff; box-shadow: inset 0 3px 7px rgba(0,0,0,0.55); }
   .team-row.visible { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+  #team-btns-container { display: flex; flex-direction: column; gap: 8px; }
   .btn-close-teams { background: transparent; border: 1px solid #2e3150; border-radius: 20px; color: #555a7a; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; font-weight: 600; padding: 7px 0; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; width: 100%; margin-top: 4px; transition: all 0.15s; }
   .btn-select-all  { color: rgba(110,185,145,0.45) !important; border-color: rgba(110,185,145,0.22); }
   .btn-select-all.on  { color: #82c9a0 !important; border-color: #4a9068 !important; background: rgba(80,150,110,0.15) !important; font-weight: 700; }
@@ -475,6 +476,7 @@
     border: 1px solid rgba(0, 112, 186, 0.30);
     border-radius: 10px;
     text-align: center;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.35);
   }
   #donate-custom-input-info {
     flex: 1;
@@ -1027,7 +1029,7 @@ const ROLAND_GARROS_CSS = `
   .btn-amount.on { color: #ffffff; border-color: #ffffff; background: rgba(255,255,255,0.15); }
   #donate-custom-input { background: rgba(255,255,255,0.15); color: #ffffff; border-color: rgba(255,255,255,0.4); }
   .donate-custom-euro { color: rgba(255,255,255,0.7); }
-  #info-donate { background: #C84B11; border-color: rgba(255,255,255,0.35); box-shadow: 0 12px 36px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.35); }
+  #info-donate { background: #C84B11; border-color: rgba(255,255,255,0.35); }
   #info-donate .btn-amount { background: transparent; border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
   #info-donate .btn-amount.on { background: rgba(255,255,255,0.15); border-color: #ffffff; color: #ffffff; }
   #info-donate .donate-custom-euro { color: rgba(255,255,255,0.7); }
