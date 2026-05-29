@@ -1169,30 +1169,20 @@ let LEAGUES = [];
 
 function parseClubTeams(html) {
   const decoded = html.replace(/&amp;/g, '&');
-  const re = /href="([^"]*groupPage[^"]*[?&]group=(\d+)[^"]*)">([^<]+)/g;
   const results = [];
   const seenGroups = new Set();
+  /* Jede Zeile: Mannschaftsname aus teamPortrait-Link + Gruppen-URL aus groupPage-Link */
+  const rowRe = /title="Mannschaftsportrait"[^>]*>([^<]+)<\/a>[\s\S]*?href="([^"]*groupPage[^"]*[?&]group=(\d+)[^"]*)"/g;
   let m;
-  while ((m = re.exec(decoded)) !== null) {
-    const relHref = m[1];
-    const group   = m[2];
-    if (seenGroups.has(group)) continue; // Duplikate überspringen
+  while ((m = rowRe.exec(decoded)) !== null) {
+    const label   = m[1].trim();
+    const relHref = m[2];
+    const group   = m[3];
+    if (seenGroups.has(group)) continue;
     seenGroups.add(group);
-    const label = m[3].trim().replace(/\s+Gr\.\s*\d+.*$/i, '').trim();
-    /* Absolute hrefs (andere Subdomain wie tvn.liga.nu) direkt verwenden */
     const url = relHref.startsWith('http') ? relHref : 'https://wtv.liga.nu' + relHref;
     results.push({ team: 'g' + group, label, url, color: [128, 128, 128] });
   }
-  // Doppelte Labels nummerieren: "Junioren U15 Classic" → "… 1", "… 2", "… 3"
-  const labelCount = {};
-  results.forEach(r => { labelCount[r.label] = (labelCount[r.label] || 0) + 1; });
-  const labelSeen = {};
-  results.forEach(r => {
-    if (labelCount[r.label] > 1) {
-      labelSeen[r.label] = (labelSeen[r.label] || 0) + 1;
-      r.label = r.label + ' ' + labelSeen[r.label];
-    }
-  });
   return results;
 }
 
