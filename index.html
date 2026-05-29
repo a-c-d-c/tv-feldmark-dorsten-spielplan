@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>TC 1928 Ochtrup – Spielplan 2026</title>
+<title>TV Feldmark Dorsten – Spielplan 2026</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo2.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -228,7 +228,7 @@
     background: #1e2a45;
     border-radius: 12px;
     margin-bottom: 10px;
-    padding: 12px 14px;
+    padding: 14px 16px;
     border: 1px solid #1e2235;
   }
   /* Karten-Farben werden dynamisch per JS generiert → siehe #dynamic-team-css */
@@ -271,7 +271,6 @@
   }
   #report-tabelle-btn { background: rgba(100,140,220,0.15); border-color: #4a6aaa; color: #8aadd4; }
   /* ── Spenden-Banner ── */
-  #donate-banner, #info-donate { display: none !important; }
   #donate-banner {
     margin: 0 0 16px;
     padding: 18px 16px 14px;
@@ -516,13 +515,13 @@
 
   .card-tag-row {
     text-align: center;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
   }
   .card-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     gap: 8px;
   }
   .card-date {
@@ -571,7 +570,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 2px;
+    margin-top: 4px;
   }
   .card-match-teams {
     flex: 1;
@@ -584,6 +583,10 @@
   .team          { font-size: 0.92rem; font-weight: 700; color: #fff; line-height: 1.3; }
   .team.opponent { font-weight: 400; color: #c0c4d8; }
   .vs { font-size: 0.75rem; color: #c0c4d8; font-weight: 400; margin: 0 6px; flex-shrink: 0; }
+  @media (max-width: 480px) {
+    .card-match-teams .team:not(.opponent) { width: 100%; }
+    .card-match-teams .vs { margin-left: 0; }
+  }
 
   .result { font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
   .result.win  { color: #78b890; }
@@ -683,10 +686,10 @@
 <div class="header">
   <button class="btn-info" onclick="showInfo()" title="Info">i</button>
   <div class="header-title">
-    <img src="logo.png" class="header-logo" alt="TC 1928 Ochtrup Logo" onerror="this.style.display='none'">
-    <h1>TC 1928 Ochtrup</h1>
+    <img src="logo.png" class="header-logo" alt="TV Feldmark Dorsten Logo" onerror="this.style.display='none'">
+    <h1>TV Feldmark Dorsten</h1>
   </div>
-  <p>Spielplan · Münsterland · Sommer 2026</p>
+  <p>Spielplan · Ruhrgebiet · Sommer 2026</p>
 </div>
 
 <!-- Spenden-Banner -->
@@ -710,7 +713,7 @@
   <button class="btn-donate-later" onclick="closeDonate()">Vielleicht später →</button>
 </div>
 
-<div id="main-content">
+<div id="main-content" style="opacity:0;pointer-events:none">
 
 <!-- Nächstes Spiel -->
 <div id="next-match-box" class="next-match-box">
@@ -807,13 +810,13 @@
 <script>
 /* ── Konfiguration ─────────────────────────────────────────── */
 /* ── Dynamische Mannschaftsliste ───────────────────────────── */
-const CLUB_NAME      = 'Ochtrup';
-const CLUB_TEAMS_URL = 'https://wtv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/clubTeams?club=26831';
-const LS_STATE       = 'spielplan-state';
-const LS_AUSWAHL     = 'spielplan-meine-auswahl';
-const LS_LEAGUES     = 'spielplan-leagues';
-const LS_THEME       = 'spielplan-theme';
-const LS_STARTS      = 'spielplan-starts';
+const CLUB_NAME      = 'Feldmark';
+const CLUB_TEAMS_URL = 'https://wtv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/clubTeams?club=25977';
+const LS_STATE       = 'feldmark-state';
+const LS_AUSWAHL     = 'feldmark-meine-auswahl';
+const LS_LEAGUES     = 'feldmark-leagues';
+const LS_THEME       = 'feldmark-theme';
+const LS_STARTS      = 'feldmark-starts';
 
 const LIGHT_THEME_CSS = `
   body { background: #f0f2f8; }
@@ -1758,6 +1761,12 @@ function renderMatches() {
       ? '<div class="past-divider"></div>'
       : '';
 
+    const resultEl = past
+      ? (m.reportUrl
+          ? `<button class="result ${resultCls(m.result, m.isHome)}" onclick="showReport('${m.team}','${m.reportUrl}',allMatches.find(x=>x.reportUrl==='${m.reportUrl}'))">${resultTxt(m.result)}</button>`
+          : `<span class="result ${resultCls(m.result, m.isHome)}">${resultTxt(m.result)}</span>`)
+      : '';
+
     return divider + `<div class="card ${teamCls}${extra}">
   <div class="card-tag-row"><span class="tag ${tagCls}" onclick="openMannschaften(event)" style="cursor:pointer">${m.label}</span></div>
   <div class="card-top">
@@ -1765,7 +1774,7 @@ function renderMatches() {
     ${past ? '' : `<span class="card-countdown" data-matchtime="${matchDateTime(m.date, m.timeStr).getTime()}">${countdownLabel(m.date, m.timeStr)}</span>`}
     ${tabelleBtn}
   </div>
-  <div class="card-match"><div class="card-match-teams">${homeSpan}<span class="vs">vs.</span>${awaySpan}</div>${past ? (m.reportUrl ? `<button class="result ${resultCls(m.result, m.isHome)}" onclick="showReport('${m.team}','${m.reportUrl}',allMatches.find(x=>x.reportUrl==='${m.reportUrl}'))">${resultTxt(m.result)}</button>` : `<span class="result ${resultCls(m.result, m.isHome)}">${resultTxt(m.result)}</span>`) : ''}</div>
+  <div class="card-match"><div class="card-match-teams">${homeSpan}<span class="vs">vs.</span>${awaySpan}</div>${resultEl}</div>
 </div>`;
   }).join('\n');
 }
