@@ -1601,10 +1601,12 @@ function renderNextMatch() {
       if (el) el.classList.remove('blink');
     }, 5000);
   }
+  const nmOwnStyle = 'font-weight:700;color:#fff;text-transform:uppercase';
+  const nmOppStyle = 'font-weight:400;color:#c0c4d8;text-transform:uppercase';
   document.getElementById('nm-teams').innerHTML    =
-    `<span style="font-weight:700;color:#fff;text-transform:uppercase">${esc(next.homeTeam)}</span>` +
+    `<span style="${next.isHome ? nmOwnStyle : nmOppStyle}">${esc(next.homeTeam)}</span>` +
     `<span style="font-size:0.85rem;color:#c8cde4;font-weight:600;margin:0 5px">vs.</span>` +
-    `<span style="font-weight:700;color:#fff;text-transform:uppercase">${esc(next.awayTeam)}</span>`;
+    `<span style="${next.isHome ? nmOppStyle : nmOwnStyle}">${esc(next.awayTeam)}</span>`;
   const nmLeague = document.getElementById('nm-league');
   nmLeague.textContent = next.label;
   nmLeague.className = 'nm-league btn-' + next.team + ' on';
