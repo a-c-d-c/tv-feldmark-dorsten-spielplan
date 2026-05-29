@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>TV Feldmark Dorsten – Spielplan 2026</title>
+<title>TC 22 Rheine – Spielplan 2026</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo2.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -103,12 +103,20 @@
   .nm-teams {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0;
+    flex-wrap: nowrap;
+    gap: 10px;
     margin-top: 10px;
     line-height: 1.4;
     width: 100%;
     min-height: 4.2em;
+  }
+  .nm-match-teams {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 2px;
   }
   .nm-league {
     display: inline-block;
@@ -613,8 +621,8 @@
   @media (max-width: 480px) {
     .card-match-teams .team:not(.opponent) { width: 100%; }
     .card-match-teams .vs { display: none; }
-    #nm-teams > span:first-child { width: 100%; }
-    #nm-teams > span:nth-child(2) { display: none; }
+    .nm-match-teams span:first-child { width: 100%; }
+    .nm-match-teams span:nth-child(2) { display: none; }
   }
 
   .result { font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
@@ -715,10 +723,10 @@
 <div class="header">
   <button class="btn-info" onclick="showInfo()" title="Info">i</button>
   <div class="header-title">
-    <img src="logo.png" class="header-logo" alt="TV Feldmark Dorsten Logo" onerror="this.style.display='none'">
-    <h1>TV Feldmark Dorsten</h1>
+    <img src="logo.png" class="header-logo" alt="TC 22 Rheine Logo" onerror="this.style.display='none'">
+    <h1>TC 22 Rheine</h1>
   </div>
-  <p>Spielplan · Ruhrgebiet · Sommer 2026</p>
+  <p>Spielplan · Münsterland · Sommer 2026</p>
 </div>
 
 <!-- Spenden-Banner -->
@@ -845,13 +853,13 @@
 <script>
 /* ── Konfiguration ─────────────────────────────────────────── */
 /* ── Dynamische Mannschaftsliste ───────────────────────────── */
-const CLUB_NAME      = 'Feldmark';
-const CLUB_TEAMS_URL = 'https://wtv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/clubTeams?club=25977';
-const LS_STATE       = 'feldmark-state';
-const LS_AUSWAHL     = 'feldmark-meine-auswahl';
-const LS_LEAGUES     = 'feldmark-leagues';
-const LS_THEME       = 'feldmark-theme';
-const LS_STARTS      = 'feldmark-starts';
+const CLUB_NAME      = 'Rheine';
+const CLUB_TEAMS_URL = 'https://wtv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/clubTeams?club=26302';
+const LS_STATE       = 'rheine-state';
+const LS_AUSWAHL     = 'rheine-meine-auswahl';
+const LS_LEAGUES     = 'rheine-leagues';
+const LS_THEME       = 'rheine-theme';
+const LS_STARTS      = 'rheine-starts';
 
 const LIGHT_THEME_CSS = `
   body { background: #f0f2f8; }
@@ -1656,10 +1664,13 @@ function renderNextMatch() {
   }
   const nmOwnStyle = 'font-weight:700;color:#fff;text-transform:uppercase';
   const nmOppStyle = 'font-weight:400;color:#c0c4d8;text-transform:uppercase';
-  document.getElementById('nm-teams').innerHTML    =
+  document.getElementById('nm-teams').innerHTML =
+    `<div class="nm-match-teams">` +
     `<span style="${next.isHome ? nmOwnStyle : nmOppStyle}">${esc(next.homeTeam)}</span>` +
     `<span style="font-size:0.85rem;color:#c8cde4;font-weight:600;margin:0 5px">vs.</span>` +
-    `<span style="${next.isHome ? nmOppStyle : nmOwnStyle}">${esc(next.awayTeam)}</span>`;
+    `<span style="${next.isHome ? nmOppStyle : nmOwnStyle}">${esc(next.awayTeam)}</span>` +
+    `</div>` +
+    `<button class="btn-tabelle" onclick="event.stopPropagation();showTable('${next.team}')">Tabelle</button>`;
   const nmLeague = document.getElementById('nm-league');
   nmLeague.textContent = next.label;
   nmLeague.className = 'nm-league btn-' + next.team + ' on';
@@ -1784,7 +1795,14 @@ function esc(s) {
 function renderMatches() {
   const container = document.getElementById('matches-container');
 
+  const today0 = new Date(); today0.setHours(0, 0, 0, 0);
+  const nextMatch = showFuture ? allMatches.find(m => {
+    const d = new Date(m.date); d.setHours(0, 0, 0, 0);
+    return d >= today0 && showTeams[m.team] && (m.isHome ? showHome : showAway);
+  }) : null;
+
   const visible = allMatches.filter(m =>
+    m !== nextMatch &&
     showTeams[m.team] &&
     (isPast(m.date) ? showPast : showFuture) &&
     (m.isHome ? showHome : showAway)
