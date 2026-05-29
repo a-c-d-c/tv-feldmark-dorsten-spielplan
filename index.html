@@ -489,10 +489,16 @@
   }
   .detail-schedule-row:last-child { border-bottom: none; }
   .detail-schedule-date { color: #9095b0; white-space: nowrap; flex-shrink: 0; min-width: 88px; }
-  .detail-schedule-teams { flex: 1; min-width: 0; line-height: 1.35; }
+  .detail-schedule-group-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; color: #7a7f96;
+    margin: 20px 0 4px; padding-top: 14px; border-top: 1px solid rgba(144,149,176,0.18);
+  }
+  .detail-schedule-title + .detail-schedule-group-label { margin-top: 6px; padding-top: 0; border-top: none; }
+  .detail-schedule-teams { flex: 1; min-width: 0; display: flex; align-items: center; flex-wrap: wrap; row-gap: 1px; line-height: 1.35; }
   .detail-schedule-own  { font-weight: 700; color: #e8eaf0; }
   .detail-schedule-opp  { font-weight: 400; color: #9095b0; }
-  .detail-schedule-vs   { color: #9095b0; font-size: 0.75rem; margin: 0 4px; }
+  .detail-schedule-vs   { color: #9095b0; font-size: 0.75rem; margin: 0 4px; flex-shrink: 0; }
   .detail-schedule-result { flex-shrink: 0; font-weight: 700; font-size: 0.9rem; }
   .detail-schedule-result.win  { color: #78b890; }
   .detail-schedule-result.loss { color: #b87070; }
@@ -647,6 +653,8 @@
     .card-match-teams .vs { display: none; }
     .nm-match-teams span:first-child { width: 100%; }
     .nm-match-teams span:nth-child(2) { display: none; }
+    .detail-schedule-teams span:first-child { width: 100%; }
+    .detail-schedule-vs { display: none; }
   }
 
   .result { font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
@@ -1977,35 +1985,37 @@ function showTable(team) {
   document.getElementById('detail-title').textContent = league.label + ' – Tabelle';
   document.getElementById('detail-table-container').innerHTML = tableHtml;
 
-  // Spielplan für dieses Team
-  const teamMatches = allMatches.filter(m => m.team === team);
+  // Spielplan aller Mannschaften
   let schedHtml = '<div class="detail-schedule-title">Spielplan</div>';
-  for (const m of teamMatches) {
-    const past = isPast(m.date);
-    const wd   = WEEKDAYS[m.date.getDay()];
-    const own  = m.isHome ? m.homeTeam : m.awayTeam;
-    const opp  = m.isHome ? m.awayTeam : m.homeTeam;
-    let resultEl = '';
-    if (past) {
-      const cls  = resultCls(m.result, m.isHome);
-      const txt  = resultTxt(m.result);
-      if (m.reportUrl) {
-        const safeUrl = m.reportUrl.replace(/'/g, "\\'");
-        const safeTeam = m.team.replace(/'/g, "\\'");
-        resultEl = `<button class="detail-schedule-result ${cls}" onclick="showReport('${safeTeam}','${safeUrl}',allMatches.find(x=>x.reportUrl==='${safeUrl}'))">${esc(txt)}</button>`;
-      } else {
-        resultEl = `<span class="detail-schedule-result ${cls}">${esc(txt)}</span>`;
+  for (const lg of LEAGUES) {
+    const lgMatches = allMatches.filter(m => m.team === lg.team);
+    if (!lgMatches.length) continue;
+    schedHtml += `<div class="detail-schedule-group-label">${esc(lg.label)}</div>`;
+    for (const m of lgMatches) {
+      const past = isPast(m.date);
+      const wd   = WEEKDAYS[m.date.getDay()];
+      let resultEl = '';
+      if (past) {
+        const cls = resultCls(m.result, m.isHome);
+        const txt = resultTxt(m.result);
+        if (m.reportUrl) {
+          const safeUrl  = m.reportUrl.replace(/'/g, "\\'");
+          const safeTeam = m.team.replace(/'/g, "\\'");
+          resultEl = `<button class="detail-schedule-result ${cls}" onclick="showReport('${safeTeam}','${safeUrl}',allMatches.find(x=>x.reportUrl==='${safeUrl}'))">${esc(txt)}</button>`;
+        } else {
+          resultEl = `<span class="detail-schedule-result ${cls}">${esc(txt)}</span>`;
+        }
       }
+      schedHtml += `<div class="detail-schedule-row">` +
+        `<span class="detail-schedule-date">${wd} ${m.dateStr}<br><span style="font-size:0.78rem">${m.timeStr}</span></span>` +
+        `<span class="detail-schedule-teams">` +
+          `<span class="detail-schedule-${m.isHome ? 'own' : 'opp'}">${esc(m.homeTeam)}</span>` +
+          `<span class="detail-schedule-vs">vs.</span>` +
+          `<span class="detail-schedule-${m.isHome ? 'opp' : 'own'}">${esc(m.awayTeam)}</span>` +
+        `</span>` +
+        resultEl +
+        `</div>`;
     }
-    schedHtml += `<div class="detail-schedule-row">` +
-      `<span class="detail-schedule-date">${wd} ${m.dateStr}<br><span style="font-size:0.78rem">${m.timeStr}</span></span>` +
-      `<span class="detail-schedule-teams">` +
-        `<span class="detail-schedule-${m.isHome ? 'own' : 'opp'}">${esc(m.homeTeam)}</span>` +
-        `<span class="detail-schedule-vs">vs.</span>` +
-        `<span class="detail-schedule-${m.isHome ? 'opp' : 'own'}">${esc(m.awayTeam)}</span>` +
-      `</span>` +
-      resultEl +
-      `</div>`;
   }
   document.getElementById('detail-schedule-container').innerHTML = schedHtml;
 
