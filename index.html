@@ -643,26 +643,8 @@
     letter-spacing: 0.04em;
   }
 
-  /* ── Settings Button ── */
-  .btn-settings {
-    position: absolute; top: 0; left: 0;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: 1px solid #3a3f60;
-    background: rgba(144,149,176,0.08);
-    color: #9095b0;
-    font-size: 1rem;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: border-color 0.15s, color 0.15s;
-  }
-
-
-  /* ── Settings View ── */
-  #settings-view { display: none; }
-
   /* ── Vollbild-Overlay für alle Views ── */
-  #info-view, #detail-view, #report-view, #settings-view {
+  #info-view, #detail-view, #report-view {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     overflow-y: auto;
@@ -683,13 +665,8 @@
     padding-bottom: 40px;
   }
 
-  .settings-content { color: #c8cade; font-size: 0.9rem; line-height: 1.7; padding-top: 8px; }
-  .settings-content h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.06em; color: #fff; margin: 18px 0 12px; }
-  .settings-theme-row { display: flex; gap: 8px; }
-
   @media (hover: hover) {
     .btn-info:hover { border-color: #9095b0; color: #fff; }
-    .btn-settings:hover { border-color: #9095b0; color: #fff; }
     .btn:hover { background: #1a1d2e; color: #9095b0; border-color: #444a68; }
     .btn-mannschaften:hover { background: #1a1d2e; color: #9095b0; border-color: #444a68; }
     .team-btn-rank:hover { opacity: 1; }
@@ -708,7 +685,6 @@
 <body>
 
 <div class="header">
-  <button class="btn-settings" onclick="showSettings()" title="Einstellungen">⚙</button>
   <button class="btn-info" onclick="showInfo()" title="Info">i</button>
   <div class="header-title">
     <img src="logo.png" class="header-logo" alt="TV Feldmark Dorsten Logo" onerror="this.style.display='none'">
@@ -832,20 +808,6 @@
   </div>
 </div>
 
-<div id="settings-view">
-  <div class="detail-header">
-    <button class="btn-back" onclick="backToList()">← Zurück</button>
-    <div class="detail-title">Einstellungen</div>
-  </div>
-  <div class="settings-content">
-    <h2>Design</h2>
-    <div class="settings-theme-row">
-      <button class="btn btn-filter" id="btn-theme-dark"  onclick="setTheme('dark')">Dunkel</button>
-      <button class="btn btn-filter" id="btn-theme-light" onclick="setTheme('light')">Hell</button>
-    </div>
-  </div>
-</div>
-
 <script>
 /* ── Konfiguration ─────────────────────────────────────────── */
 /* ── Dynamische Mannschaftsliste ───────────────────────────── */
@@ -880,14 +842,11 @@ const LIGHT_THEME_CSS = `
   .btn-select-none.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: #5060a0 !important; background: #c8cde4 !important; }
   .btn-meine-auswahl { color: #3a3f60 !important; border-color: #b0b5cc !important; background: transparent !important; }
   .btn-meine-auswahl.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: #5060a0 !important; background: #c8cde4 !important; }
-  #info-view, #settings-view { background: #f0f2f8; }
-  .btn-info, .btn-settings { border-color: #5a6090; color: #3a3f60; background: rgba(60,70,140,0.08); }
-  #info-view .btn-back, #settings-view .btn-back { color: #1a1d2e; border-color: #5a6090; background: rgba(60,70,140,0.08); }
-  #settings-view .detail-title { color: #1a1d2e; }
+  #info-view { background: #f0f2f8; }
+  .btn-info { border-color: #5a6090; color: #3a3f60; background: rgba(60,70,140,0.08); }
+  #info-view .btn-back { color: #1a1d2e; border-color: #5a6090; background: rgba(60,70,140,0.08); }
   .info-content { color: #1a1d2e; }
   .info-content h2 { color: #0f1020; }
-  .settings-content { color: #1a1d2e; }
-  .settings-content h2 { color: #0f1020; }
   @media (hover: hover) {
     .btn-filter:hover { background: #e0e4f0; color: #1a1d2e; border-color: #7a7f9a; }
     .btn-mannschaften:hover { background: #e0e4f0; color: #1a1d2e; border-color: #7a7f9a; }
@@ -896,8 +855,8 @@ const LIGHT_THEME_CSS = `
     .btn-select-all:hover  { background: #e0e4f0 !important; color: #1a1d2e !important; border-color: #7a7f9a !important; }
     .btn-select-none:hover { background: #e0e4f0 !important; color: #1a1d2e !important; border-color: #7a7f9a !important; }
     .btn-meine-auswahl:hover { background: #e0e4f0 !important; color: #1a1d2e !important; border-color: #7a7f9a !important; }
-    .btn-info:hover, .btn-settings:hover { border-color: #3a4080; color: #1a1d2e; background: rgba(60,70,140,0.18); }
-    #info-view .btn-back:hover, #settings-view .btn-back:hover { color: #0f1020; border-color: #3a4080; background: rgba(60,70,140,0.18); }
+    .btn-info:hover { border-color: #3a4080; color: #1a1d2e; background: rgba(60,70,140,0.18); }
+    #info-view .btn-back:hover { color: #0f1020; border-color: #3a4080; background: rgba(60,70,140,0.18); }
   }
   #donate-banner { background: rgba(0,48,135,0.06); border-color: rgba(0,112,186,0.25); }
   .donate-text { color: #3a4060; }
@@ -1038,31 +997,11 @@ function setTheme(theme) {
   const isLight = theme === 'light';
   document.getElementById('theme-override-css').textContent = isLight ? LIGHT_THEME_CSS : '';
   document.querySelector('meta[name="theme-color"]').content = isLight ? '#f0f2f8' : '#0f1117';
-  const btnDark  = document.getElementById('btn-theme-dark');
-  const btnLight = document.getElementById('btn-theme-light');
-  if (btnDark)  btnDark.classList.toggle('on', !isLight);
-  if (btnLight) btnLight.classList.toggle('on',  isLight);
   const btnInfoDark  = document.getElementById('btn-info-theme-dark');
   const btnInfoLight = document.getElementById('btn-info-theme-light');
   if (btnInfoDark)  btnInfoDark.classList.toggle('on', !isLight);
   if (btnInfoLight) btnInfoLight.classList.toggle('on',  isLight);
   localStorage.setItem(LS_THEME, theme);
-}
-
-function showSettings() {
-  if (document.getElementById('settings-view').style.display === 'block') { backToList(); return; }
-  document.getElementById('matches-container').style.display = 'none';
-  document.getElementById('update-info').style.display = 'none';
-  document.getElementById('detail-view').style.display = 'none';
-  document.getElementById('report-view').style.display = 'none';
-  document.getElementById('info-view').style.display = 'none';
-  document.getElementById('controls-bar').style.display = 'none';
-  document.getElementById('next-match-box').style.display = 'none';
-  document.getElementById('error-banner').style.display = 'none';
-  document.getElementById('loading-banner').style.display = 'none';
-  lockBodyScroll();
-  document.getElementById('settings-view').style.display = 'block';
-  window.scrollTo(0, 0);
 }
 
 // Kategorie-Paletten — hell → dunkel (jung → alt)
@@ -1953,7 +1892,6 @@ function backToList() {
   document.getElementById('detail-view').style.display = 'none';
   document.getElementById('report-view').style.display = 'none';
   document.getElementById('info-view').style.display = 'none';
-  document.getElementById('settings-view').style.display = 'none';
   document.getElementById('matches-container').style.display = '';
   document.getElementById('update-info').style.display = '';
   document.getElementById('controls-bar').style.display = '';
