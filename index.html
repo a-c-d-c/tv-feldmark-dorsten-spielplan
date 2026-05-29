@@ -1390,6 +1390,16 @@ function dismissPwaHint() {
   document.getElementById('controls-inner').style.transform = 'translateX(-100%)';
 }
 
+(function() {
+  let _swipeStartX = 0;
+  const banner = document.getElementById('pwa-hint-banner');
+  if (!banner) return;
+  banner.addEventListener('touchstart', e => { _swipeStartX = e.touches[0].clientX; }, { passive: true });
+  banner.addEventListener('touchend',   e => {
+    if (e.changedTouches[0].clientX - _swipeStartX < -40) dismissPwaHint();
+  }, { passive: true });
+})();
+
 const _state    = loadState();
 let showPast    = _state.showPast;
 let showFuture  = _state.showFuture;
