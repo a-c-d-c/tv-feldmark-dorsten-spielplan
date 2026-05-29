@@ -574,7 +574,7 @@
   }
   .team          { font-size: 0.92rem; font-weight: 700; color: #fff; line-height: 1.3; }
   .team.opponent { font-weight: 400; color: #c0c4d8; }
-  .vs { font-size: 0.75rem; color: #555a7a; font-style: italic; margin: 0 6px; flex-shrink: 0; }
+  .vs { font-size: 0.75rem; color: #c0c4d8; font-weight: 400; margin: 0 6px; flex-shrink: 0; }
 
   .result { font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .result.win  { color: #78b890; }
@@ -1771,7 +1771,6 @@ function renderMatches() {
   </div>
   <div class="card-match">${homeSpan}<span class="vs">vs.</span>${awaySpan}</div>
   <div class="card-bottom">
-    <span class="note">${m.note ? esc(m.note) : ''}</span>
     ${past && m.reportUrl
       ? `<button class="result ${resultCls(m.result, m.isHome)}" onclick="showReport('${m.team}','${m.reportUrl}',allMatches.find(x=>x.reportUrl==='${m.reportUrl}'))">${resultTxt(m.result)}</button>`
       : `<span class="result ${resultCls(m.result, m.isHome)}">${resultTxt(m.result)}</span>`}
