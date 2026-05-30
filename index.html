@@ -995,7 +995,7 @@
       <button class="btn btn-filter" id="btn-settings-theme-roland-garros" onclick="setTheme('roland-garros')">Roland Garros</button>
     </div>
     <div id="settings-overlay-section">
-      <div class="settings-section-label">Transparenz</div>
+      <div class="settings-section-label">Helligkeit</div>
       <div class="settings-slider-row">
         <span class="settings-slider-lbl">0 %</span>
         <div class="custom-slider-wrap" id="settings-overlay-slider-wrap">
@@ -1004,9 +1004,9 @@
             <div class="custom-slider-thumb" id="settings-overlay-thumb" style="left:60%"></div>
           </div>
         </div>
-        <span class="settings-slider-lbl">50 %</span>
+        <span class="settings-slider-lbl">100 %</span>
       </div>
-      <div id="settings-overlay-label">30 %</div>
+      <div id="settings-overlay-label">60 %</div>
     </div>
     <div class="settings-close-row">
       <button class="settings-close-btn" onclick="backFromSettings()">Schließen</button>
@@ -1052,21 +1052,21 @@ const LIGHT_THEME_CSS = `
   .team.opponent { color: #ffffff; font-weight: 400; }
   .nm-date { color: #ffffff; font-weight: 400; }
   .nm-match-teams span { color: #ffffff !important; }
-  .btn-filter { border-color: rgba(255,255,255,0.5); color: #3a3f60; }
-  .btn-filter.on { color: #1a1d2e; font-weight: 700; border-color: rgba(255,255,255,0.75); background: #c8cde4; }
-  .btn-mannschaften { color: #3a3f60; border-color: rgba(255,255,255,0.5); }
-  .btn-mannschaften.on { color: #1a1d2e; font-weight: 700; border-color: rgba(255,255,255,0.75); background: #c8cde4; animation: blink 1s step-end infinite; }
+  .btn-filter { border-color: rgba(90,100,160,0.35); color: #3a3f60; }
+  .btn-filter.on { color: #1a1d2e; font-weight: 700; border-color: rgba(90,100,160,0.75); background: #c8cde4; }
+  .btn-mannschaften { color: #3a3f60; border-color: rgba(90,100,160,0.35); }
+  .btn-mannschaften.on { color: #1a1d2e; font-weight: 700; border-color: rgba(90,100,160,0.75); background: #c8cde4; animation: blink 1s step-end infinite; }
   .mannschaften-wrapper.open { background: #eef0f8; border-color: rgba(255,255,255,0.5); }
   .mannschaften-wrapper.open .btn-mannschaften { border-color: transparent; background: rgba(60,70,140,0.07); color: #1a1d2e; }
   .team-row.visible { background: #eef0f8; border-color: rgba(255,255,255,0.5); }
   .team-row .btn { color: #3a3f60; }
   .btn-close-teams { border-color: rgba(255,255,255,0.5); color: #3a3f60; }
-  .btn-select-all  { color: #3a3f60 !important; border-color: rgba(255,255,255,0.5) !important; background: transparent !important; }
-  .btn-select-all.on  { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(255,255,255,0.75) !important; background: #c8cde4 !important; }
-  .btn-select-none { color: #3a3f60 !important; border-color: rgba(255,255,255,0.5) !important; background: transparent !important; }
-  .btn-select-none.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(255,255,255,0.75) !important; background: #c8cde4 !important; }
-  .btn-meine-auswahl { color: #3a3f60 !important; border-color: rgba(255,255,255,0.5) !important; background: transparent !important; }
-  .btn-meine-auswahl.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(255,255,255,0.75) !important; background: #c8cde4 !important; }
+  .btn-select-all  { color: #3a3f60 !important; border-color: rgba(90,100,160,0.35) !important; background: transparent !important; }
+  .btn-select-all.on  { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(90,100,160,0.75) !important; background: #c8cde4 !important; }
+  .btn-select-none { color: #3a3f60 !important; border-color: rgba(90,100,160,0.35) !important; background: transparent !important; }
+  .btn-select-none.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(90,100,160,0.75) !important; background: #c8cde4 !important; }
+  .btn-meine-auswahl { color: #3a3f60 !important; border-color: rgba(90,100,160,0.35) !important; background: transparent !important; }
+  .btn-meine-auswahl.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(90,100,160,0.75) !important; background: #c8cde4 !important; }
   #info-view { background: #f0f2f8; }
   #btn-info-back { color: #1a1d2e !important; }
   #settings-view { background: #f0f2f8; border-color: rgba(90,100,160,0.35); box-shadow: 0 20px 60px rgba(20,30,80,0.28), 0 6px 20px rgba(20,30,80,0.15), 0 0 0 1px rgba(90,100,160,0.08); }
@@ -1208,7 +1208,7 @@ function setOverlay(pct) {
     localStorage.setItem(LS_OVERLAY_LIGHT, pct);
   }
   const lbl = document.getElementById('settings-overlay-label');
-  if (lbl) lbl.textContent = pct + ' %';
+  if (lbl) lbl.textContent = (pct * 2) + ' %';
   updateOverlaySliderUI(pct);
 }
 
@@ -1222,7 +1222,7 @@ function updateSliderForTheme() {
     ? parseInt(localStorage.getItem(LS_OVERLAY_DARK)  || '30', 10)
     : parseInt(localStorage.getItem(LS_OVERLAY_LIGHT) || '30', 10);
   const lbl = document.getElementById('settings-overlay-label');
-  if (lbl) lbl.textContent = stored + ' %';
+  if (lbl) lbl.textContent = (stored * 2) + ' %';
   updateOverlaySliderUI(stored);
 }
 
