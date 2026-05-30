@@ -263,27 +263,28 @@
   /* Favoriten-Panel (schwebt direkt ein) */
   #favoriten-card {
     position: fixed;
-    top: calc(var(--header-h) + 8px);
+    top: var(--header-h);
     bottom: 16px;
-    left: 8px;
-    right: 8px;
+    left: 20px;
+    right: 20px;
     background: rgba(15,17,30,0.98);
     border: 1px solid #3a3f60;
     border-radius: 16px;
-    box-shadow: 0 12px 50px rgba(0,0,0,0.75), 0 3px 14px rgba(0,0,0,0.5), -6px 0 24px rgba(0,0,0,0.4), 6px 0 24px rgba(0,0,0,0.4), 0 -4px 16px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.95), 0 6px 24px rgba(0,0,0,0.85), -14px 0 50px rgba(0,0,0,0.75), 14px 0 50px rgba(0,0,0,0.75), 0 -8px 30px rgba(0,0,0,0.6);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 0 12px 12px;
     z-index: 20;
     display: none;
     opacity: 0;
-    transition: opacity 1.5s ease;
+    transition: none;
   }
   #favoriten-card.open { opacity: 1; }
   /* Header-Zeile im Panel: Close-Button zentriert, gleiche Größe wie Trigger */
   .favoriten-header-row { display: flex; gap: 6px; margin-bottom: 12px; position: sticky; top: 0; background: rgba(15,17,30,0.98); z-index: 1; padding-top: 12px; }
   .favoriten-header-spacer { flex: 1; }
   .btn-favoriten-close { flex: 1; margin: 0 6px; padding-top: 14px; padding-bottom: 14px; }
+  #favoriten-card #team-btns-container .btn:not(.on) { color: #b0b5d0 !important; border-color: rgba(144,149,176,0.4) !important; }
   /* Team-Farben werden dynamisch per JS generiert → siehe #dynamic-team-css */
 
   .btn-refresh {
@@ -360,6 +361,7 @@
     transition: opacity 3s ease, max-height 3s ease, padding 3s ease, margin 3s ease, border-width 3s ease;
   }
   #main-content { transition: opacity 3s ease; }
+  #main-content.favoriten-open > *:not(#favoriten-card) { opacity: 0 !important; pointer-events: none !important; transition: none; }
   #matches-container { transition: opacity 2s ease; }
   #page-floor { background: transparent; min-height: 200px; margin: 24px -16px -48px; }
   #controls-slider { overflow: hidden; margin-bottom: 16px; position: sticky; top: var(--header-h, 90px); z-index: 4; background: #0f1117; }
@@ -786,7 +788,7 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    color: #555a7a;
+    color: #9095b0;
     padding: 32px 16px;
     font-size: 0.85rem;
   }
@@ -1060,9 +1062,9 @@ const LIGHT_THEME_CSS = `
   .btn-favoriten-editor.open { color: #1a1d2e !important; border-color: rgba(90,100,160,0.75) !important; background: #c8cde4 !important; }
   .btn-meine-favoriten { color: #3a3f60 !important; border-color: rgba(90,100,160,0.35) !important; background: transparent !important; }
   .btn-meine-favoriten.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(90,100,160,0.75) !important; background: #c8cde4 !important; }
-  #favoriten-card { background: #f0f2f8; border-color: rgba(90,100,160,0.35); box-shadow: 0 12px 50px rgba(20,30,80,0.22), 0 3px 14px rgba(20,30,80,0.12), -6px 0 24px rgba(20,30,80,0.1), 6px 0 24px rgba(20,30,80,0.1); }
+  #favoriten-card { background: #f0f2f8; border-color: rgba(90,100,160,0.35); box-shadow: 0 20px 80px rgba(20,30,80,0.55), 0 6px 24px rgba(20,30,80,0.4), -14px 0 50px rgba(20,30,80,0.35), 14px 0 50px rgba(20,30,80,0.35); }
   #favoriten-card .favoriten-header-row { background: #f0f2f8; }
-  #favoriten-card #team-btns-container .btn { color: #3a3f60; }
+  #favoriten-card #team-btns-container .btn:not(.on) { color: #3a3f60 !important; border-color: rgba(90,100,160,0.5) !important; }
   #favoriten-card #team-btns-container .btn.on { color: #ffffff !important; }
   .btn-favoriten-close { border-color: rgba(90,100,160,0.75); background: #c8cde4; color: #1a1d2e; }
   .btn-refresh-favoriten { border-color: rgba(90,100,160,0.35); color: #3a3f60; }
@@ -1093,6 +1095,7 @@ const LIGHT_THEME_CSS = `
   .pwa-hint-link { color: #0070ba; }
   .pwa-hint-close { color: #6a7090; }
   .status-msg { color: #3a3f60; }
+  .loading-row { color: #3a3f60; }
   .update-info { color: #3a3f60; }
 `;
 
@@ -1126,8 +1129,8 @@ const ROLAND_GARROS_CSS = `
   .btn-meine-favoriten.on { color: #ffffff !important; font-weight: 700 !important; border-color: #ffffff !important; background: #143D26 !important; }
   #favoriten-card { background: #642508; border-color: rgba(255,255,255,0.3); box-shadow: 0 12px 50px rgba(0,0,0,0.75), 0 3px 14px rgba(0,0,0,0.5), -6px 0 24px rgba(0,0,0,0.45), 6px 0 24px rgba(0,0,0,0.45); }
   #favoriten-card .favoriten-header-row { background: #642508; }
-  #favoriten-card #team-btns-container .btn { color: rgba(255,255,255,0.4); background: #143D26; border-color: rgba(255,255,255,0.3); }
-  #favoriten-card #team-btns-container .btn.on { color: #ffffff; background: #143D26; border-color: #ffffff; font-weight: 700; }
+  #favoriten-card #team-btns-container .btn:not(.on) { color: rgba(255,255,255,0.75) !important; background: #143D26 !important; border-color: rgba(255,255,255,0.35) !important; }
+  #favoriten-card #team-btns-container .btn.on { color: #ffffff !important; background: #143D26 !important; border-color: #ffffff !important; font-weight: 700; }
   .btn-favoriten-close { border-color: #ffffff; background: #143D26; color: #ffffff; }
   .btn-refresh-favoriten { background: #143D26; border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.4); }
   .card::after, .next-match-box::after, .nm-league::after, .card-tag-row .tag::after, #team-btns-container .btn::after { background: transparent; }
@@ -1159,6 +1162,7 @@ const ROLAND_GARROS_CSS = `
   .pwa-hint-link { color: rgba(255,255,255,0.9); }
   .pwa-hint-close { color: rgba(255,255,255,0.7); }
   .status-msg { color: rgba(255,255,255,0.6); }
+  .loading-row { color: rgba(255,255,255,0.9); }
   .update-info { color: rgba(255,255,255,0.4); }
 `;
 
@@ -2426,6 +2430,7 @@ function openFavoriten() {
   meineAuswahlActive = true;
   closeBtn.innerHTML = 'Favoriten&shy;liste<br>schließen';
 
+  document.getElementById('main-content').classList.add('favoriten-open');
   card.style.display = 'block';
   requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('open')));
 }
@@ -2436,6 +2441,11 @@ function closeFavoriten(immediate) {
   const closeBtn = document.getElementById('btn-favoriten-close');
   const card = document.getElementById('favoriten-card');
 
+  const mc = document.getElementById('main-content');
+  Array.from(mc.children).forEach(el => { if (el.id !== 'favoriten-card') el.style.transition = 'none'; });
+  mc.classList.remove('favoriten-open');
+  requestAnimationFrame(() => { Array.from(mc.children).forEach(el => { el.style.transition = ''; }); });
+
   // Save current team selection as favorites
   localStorage.setItem(LS_AUSWAHL, JSON.stringify({ ...showTeams }));
 
@@ -2443,7 +2453,7 @@ function closeFavoriten(immediate) {
   if (immediate) {
     card.style.display = 'none';
   } else {
-    setTimeout(() => { card.style.display = 'none'; }, 1550);
+    card.style.display = 'none';
   }
   closeBtn.innerHTML = 'Meine<br>Favoriten<br>auswählen';
 
@@ -2830,48 +2840,14 @@ function applyMeineFavoriten() {
   renderMatches();
 }
 
-/* ── Alle Mannschaften: Langdruck (3s) → alle abwählen; Doppelklick → alle auswählen */
+/* ── Alle Mannschaften: Klick → alle auswählen */
 (function() {
   const btn = document.getElementById('btn-alle-mannschaften');
-  let pressTimer = null;
-  let longPressFired = false;
   let isTouch = false;
-  let lastClickTime = 0;
-
-  function startTimer() {
-    longPressFired = false;
-    pressTimer = setTimeout(function() {
-      longPressFired = true;
-      deselectAllTeams();
-    }, 3000);
-  }
-  function cancelTimer() { clearTimeout(pressTimer); pressTimer = null; }
-
-  btn.addEventListener('touchstart', function(e) {
-    e.preventDefault();
-    isTouch = true;
-    startTimer();
-  });
-  btn.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    cancelTimer();
-    if (!longPressFired) selectAllTeams();
-    longPressFired = false;
-    setTimeout(function() { isTouch = false; }, 600);
-  });
-  btn.addEventListener('touchcancel', function() {
-    cancelTimer();
-    longPressFired = false;
-    setTimeout(function() { isTouch = false; }, 600);
-  });
-  btn.addEventListener('mousedown',  function() { if (!isTouch) startTimer(); });
-  btn.addEventListener('mouseup',    function() { if (!isTouch) cancelTimer(); });
-  btn.addEventListener('mouseleave', function() { if (!isTouch) cancelTimer(); });
-  btn.addEventListener('click',      function() {
-    if (isTouch) return;
-    if (!longPressFired) selectAllTeams();
-    longPressFired = false;
-  });
+  btn.addEventListener('touchstart', function(e) { e.preventDefault(); isTouch = true; }, { passive: false });
+  btn.addEventListener('touchend',   function(e) { e.preventDefault(); selectAllTeams(); setTimeout(function() { isTouch = false; }, 600); });
+  btn.addEventListener('touchcancel',function() { setTimeout(function() { isTouch = false; }, 600); });
+  btn.addEventListener('click',      function() { if (!isTouch) selectAllTeams(); });
 })();
 
 /* ── Meine Favoriten: Klick → gespeicherte Favoriten anwenden */
@@ -2886,7 +2862,7 @@ function applyMeineFavoriten() {
 
 /* ── Favoriten: Trigger in Controls-Bar und Close-Button im Panel */
 document.getElementById('btn-favoriten-editor').addEventListener('click', toggleFavoriten);
-document.getElementById('btn-favoriten-close').addEventListener('click', function() { closeFavoriten(); });
+document.getElementById('btn-favoriten-close').addEventListener('click', function() { closeFavoriten(true); });
 
 /* ── Start ─────────────────────────────────────────────────── */
 function updateHeaderH() {
