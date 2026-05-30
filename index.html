@@ -60,7 +60,7 @@
   }
   #info-view { display: none; }
   #settings-backdrop {
-    position: fixed; top: var(--header-h, 80px); left: 0; right: 0; bottom: 0; z-index: 19; display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 19; display: none;
   }
   #settings-view {
     position: fixed;
@@ -247,12 +247,10 @@
   /* ── 3-Button Mannschaftsauswahl ── */
   .team-select-row { position: relative; display: flex; gap: 6px; margin-bottom: 8px; }
   .team-select-row .btn { flex: 1; min-width: 0; text-align: center; line-height: 1.35; white-space: normal; padding-top: 11px; padding-bottom: 11px; }
-  .team-select-row.favoriten-open #btn-alle-mannschaften,
-  .team-select-row.favoriten-open #btn-meine-favoriten { visibility: hidden; }
   .btn-alle-mannschaften { color: rgba(110,185,145,0.45); border-color: rgba(110,185,145,0.22); -webkit-touch-callout: none; touch-action: none; }
   .btn-alle-mannschaften.on { color: #82c9a0 !important; border-color: #4a9068 !important; background: rgba(80,150,110,0.15) !important; font-weight: 700; }
-  .btn-favoriten-editor { color: #9095b0; border-color: #2e3150; -webkit-touch-callout: none; }
-  .btn-favoriten-editor.open { color: #fff; border-color: #9095b0; background: rgba(144,149,176,0.08); }
+  .btn-favoriten-editor { color: #9095b0; border-color: #2e3150; -webkit-touch-callout: none; margin: 0 6px; }
+  .btn-favoriten-editor.open { color: #fff; border-color: #9095b0; background: rgba(144,149,176,0.12); }
   .btn-meine-favoriten { color: rgba(190,155,70,0.45); border-color: rgba(190,155,70,0.22); -webkit-touch-callout: none; touch-action: none; }
   .btn-meine-favoriten.on { color: #d4b054 !important; border-color: #a07830 !important; background: rgba(170,130,50,0.18) !important; font-weight: 700; }
   .team-btn-rank { font-size: 0.75rem; opacity: 0.7; white-space: nowrap; margin-left: 8px; flex-shrink: 0; cursor: pointer; text-decoration: underline dotted; }
@@ -262,7 +260,7 @@
   .btn-refresh-favoriten { background: transparent; border: 1px solid #2e3150; border-radius: 20px; color: #555a7a; font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 600; padding: 5px 0; cursor: pointer; text-transform: uppercase; letter-spacing: 0; width: 100%; margin-top: 4px; transition: all 0.15s; }
   .btn-refresh-favoriten:disabled { opacity: 0.4; cursor: default; }
   .btn-refresh-favoriten.spinning { animation: spin 0.7s linear infinite; }
-  /* Favoriten-Karte (floating) */
+  /* Favoriten-Panel (schwebt direkt ein) */
   #favoriten-card {
     position: fixed;
     top: calc(var(--header-h) + 8px);
@@ -275,14 +273,17 @@
     box-shadow: 0 12px 50px rgba(0,0,0,0.75), 0 3px 14px rgba(0,0,0,0.5), -6px 0 24px rgba(0,0,0,0.4), 6px 0 24px rgba(0,0,0,0.4), 0 -4px 16px rgba(0,0,0,0.3);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 16px 12px;
+    padding: 0 12px 12px;
     z-index: 20;
     display: none;
     opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 1.5s ease;
   }
-  #favoriten-card.open { opacity: 1; transform: translateY(0); }
+  #favoriten-card.open { opacity: 1; }
+  /* Header-Zeile im Panel: Close-Button zentriert, gleiche Größe wie Trigger */
+  .favoriten-header-row { display: flex; gap: 6px; margin-bottom: 12px; position: sticky; top: 0; background: rgba(15,17,30,0.98); z-index: 1; padding-top: 12px; }
+  .favoriten-header-spacer { flex: 1; }
+  .btn-favoriten-close { flex: 1; margin: 0 6px; padding-top: 14px; padding-bottom: 14px; }
   /* Team-Farben werden dynamisch per JS generiert → siehe #dynamic-team-css */
 
   .btn-refresh {
@@ -923,6 +924,11 @@
 </div>
 
 <div id="favoriten-card">
+  <div class="favoriten-header-row">
+    <div class="favoriten-header-spacer"></div>
+    <button class="btn btn-favoriten-close" id="btn-favoriten-close">Meine<br>Favoriten<br>auswählen</button>
+    <div class="favoriten-header-spacer"></div>
+  </div>
   <div id="team-btns-container"></div>
 </div>
 
@@ -1055,7 +1061,10 @@ const LIGHT_THEME_CSS = `
   .btn-meine-favoriten { color: #3a3f60 !important; border-color: rgba(90,100,160,0.35) !important; background: transparent !important; }
   .btn-meine-favoriten.on { color: #1a1d2e !important; font-weight: 700 !important; border-color: rgba(90,100,160,0.75) !important; background: #c8cde4 !important; }
   #favoriten-card { background: #f0f2f8; border-color: rgba(90,100,160,0.35); box-shadow: 0 12px 50px rgba(20,30,80,0.22), 0 3px 14px rgba(20,30,80,0.12), -6px 0 24px rgba(20,30,80,0.1), 6px 0 24px rgba(20,30,80,0.1); }
+  #favoriten-card .favoriten-header-row { background: #f0f2f8; }
   #favoriten-card #team-btns-container .btn { color: #3a3f60; }
+  #favoriten-card #team-btns-container .btn.on { color: #ffffff !important; }
+  .btn-favoriten-close { border-color: rgba(90,100,160,0.75); background: #c8cde4; color: #1a1d2e; }
   .btn-refresh-favoriten { border-color: rgba(90,100,160,0.35); color: #3a3f60; }
   #info-view { background: #f0f2f8; }
   #btn-info-back { color: #1a1d2e !important; }
@@ -1116,8 +1125,10 @@ const ROLAND_GARROS_CSS = `
   .btn-meine-favoriten { color: rgba(255,255,255,0.4) !important; border-color: rgba(255,255,255,0.3) !important; background: #143D26 !important; }
   .btn-meine-favoriten.on { color: #ffffff !important; font-weight: 700 !important; border-color: #ffffff !important; background: #143D26 !important; }
   #favoriten-card { background: #642508; border-color: rgba(255,255,255,0.3); box-shadow: 0 12px 50px rgba(0,0,0,0.75), 0 3px 14px rgba(0,0,0,0.5), -6px 0 24px rgba(0,0,0,0.45), 6px 0 24px rgba(0,0,0,0.45); }
+  #favoriten-card .favoriten-header-row { background: #642508; }
   #favoriten-card #team-btns-container .btn { color: rgba(255,255,255,0.4); background: #143D26; border-color: rgba(255,255,255,0.3); }
   #favoriten-card #team-btns-container .btn.on { color: #ffffff; background: #143D26; border-color: #ffffff; font-weight: 700; }
+  .btn-favoriten-close { border-color: #ffffff; background: #143D26; color: #ffffff; }
   .btn-refresh-favoriten { background: #143D26; border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.4); }
   .card::after, .next-match-box::after, .nm-league::after, .card-tag-row .tag::after, #team-btns-container .btn::after { background: transparent; }
   #info-view { background: #642508; }
@@ -2086,7 +2097,7 @@ function renderNextMatch() {
 
   const next = allMatches.find(m => {
     const d = new Date(m.date); d.setHours(0, 0, 0, 0);
-    return d >= today && showFuture && showTeams[m.team] && (m.isHome ? showHome : showAway);
+    return d >= today && !isMatchOver(m) && showFuture && showTeams[m.team] && (m.isHome ? showHome : showAway);
   });
   if (!next) {
     document.getElementById('nm-date').innerHTML  = '';
@@ -2145,13 +2156,22 @@ function renderNextMatch() {
 
   if (diff === 0) {
     dEl.className = 'nm-days today';
-    dEl.dataset.nmMatchtime = matchDateTime(next.date, next.timeStr).getTime();
+    const nmMt = matchDateTime(next.date, next.timeStr);
+    const nmDur = matchDurationMs(next);
     uEl.textContent = '';
-    const ms0 = +dEl.dataset.nmMatchtime - Date.now();
+    const ms0 = nmMt.getTime() - Date.now();
     if (ms0 > 0) {
+      dEl.dataset.nmMatchtime = nmMt.getTime();
+      dEl.dataset.nmDuration = nmDur;
+      delete dEl.dataset.nmExpiry;
       const h0 = Math.floor(ms0/3600000), m0 = Math.floor((ms0%3600000)/60000), s0 = Math.floor((ms0%60000)/1000);
       dEl.textContent = String(h0).padStart(2,'0')+':'+String(m0).padStart(2,'0')+':'+String(s0).padStart(2,'0');
-    } else { dEl.textContent = 'läuft'; dEl.classList.add('blink'); delete dEl.dataset.nmMatchtime; }
+    } else {
+      dEl.textContent = 'läuft'; dEl.classList.add('blink');
+      dEl.dataset.nmExpiry = (nmMt.getTime() + nmDur).toString();
+      delete dEl.dataset.nmMatchtime;
+      delete dEl.dataset.nmDuration;
+    }
   } else {
     delete dEl.dataset.nmMatchtime;
     dEl.textContent = diff;    dEl.className = 'nm-days';
@@ -2169,7 +2189,7 @@ function matchDateTime(date, timeStr) {
   return dt;
 }
 
-function countdownLabel(date, timeStr) {
+function countdownLabel(date, timeStr, label) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const matchDay = new Date(date); matchDay.setHours(0, 0, 0, 0);
   const days = Math.round((matchDay - today) / 86400000);
@@ -2183,7 +2203,8 @@ function countdownLabel(date, timeStr) {
     const s = Math.floor((diffMs % 60000) / 1000);
     return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   }
-  if (diffMs > -6 * 3600000) return 'läuft';
+  const dur = /\b2er\b/i.test(label || '') ? 4 * 3600000 : 6 * 3600000;
+  if (diffMs > -dur) return 'läuft';
   return '';
 }
 
@@ -2195,7 +2216,6 @@ function updateCountdowns() {
     renderMatches();
     return;
   }
-  // Nächstes-Spiel-Countdown
   const nmDays = document.getElementById('nm-days');
   if (nmDays && nmDays.dataset.nmMatchtime) {
     const ms = +nmDays.dataset.nmMatchtime - Date.now();
@@ -2205,9 +2225,19 @@ function updateCountdowns() {
     } else {
       nmDays.textContent = 'läuft';
       nmDays.classList.add('blink');
+      const dur = parseInt(nmDays.dataset.nmDuration || '21600000', 10);
+      nmDays.dataset.nmExpiry = (+nmDays.dataset.nmMatchtime + dur).toString();
       delete nmDays.dataset.nmMatchtime;
     }
   }
+  if (nmDays && nmDays.dataset.nmExpiry && Date.now() >= +nmDays.dataset.nmExpiry) {
+    delete nmDays.dataset.nmExpiry;
+    delete nmDays.dataset.nmDuration;
+    renderNextMatch();
+    renderMatches();
+    return;
+  }
+  let needsRerender = false;
   document.querySelectorAll('.card-countdown[data-matchtime]').forEach(el => {
     const mt = new Date(+el.dataset.matchtime);
     const now = new Date();
@@ -2215,6 +2245,7 @@ function updateCountdowns() {
     const today = new Date(); today.setHours(0,0,0,0);
     const matchDay = new Date(mt); matchDay.setHours(0,0,0,0);
     const days = Math.round((matchDay - today) / 86400000);
+    const dur = parseInt(el.dataset.matchduration || '21600000', 10);
     let txt = '', blink = false;
     if (days > 1) {
       txt = 'In ' + days + ' Tagen';
@@ -2225,18 +2256,37 @@ function updateCountdowns() {
       const m = Math.floor((diffMs % 3600000) / 60000);
       const s = Math.floor((diffMs % 60000) / 1000);
       txt = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-    } else if (diffMs > -6 * 3600000) {
+    } else if (diffMs > -dur) {
       txt = 'läuft'; blink = true;
+    } else if (el.classList.contains('blink')) {
+      needsRerender = true;
     }
     el.textContent = txt;
     el.classList.toggle('blink', blink);
   });
+  if (needsRerender) {
+    renderNextMatch();
+    renderMatches();
+  }
 }
 
 function isPast(date) {
   const t = new Date(); t.setHours(0, 0, 0, 0);
   const d = new Date(date); d.setHours(0, 0, 0, 0);
   return d < t;
+}
+
+function matchDurationMs(match) {
+  return /\b2er\b/i.test(match.label || '') ? 4 * 3600000 : 6 * 3600000;
+}
+
+function isMatchOver(match) {
+  const matchDay = new Date(match.date); matchDay.setHours(0, 0, 0, 0);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  if (matchDay < today) return true;
+  if (matchDay > today) return false;
+  const mt = matchDateTime(match.date, match.timeStr);
+  return (Date.now() - mt.getTime()) >= matchDurationMs(match);
 }
 
 function resultCls(result, isHome) {
@@ -2263,29 +2313,30 @@ function renderMatches() {
   const today0 = new Date(); today0.setHours(0, 0, 0, 0);
   const nextMatch = showFuture ? allMatches.find(m => {
     const d = new Date(m.date); d.setHours(0, 0, 0, 0);
-    return d >= today0 && showTeams[m.team] && (m.isHome ? showHome : showAway);
+    return d >= today0 && !isMatchOver(m) && showTeams[m.team] && (m.isHome ? showHome : showAway);
   }) : null;
 
-  const visible = allMatches.filter(m =>
+  let visible = allMatches.filter(m =>
     m !== nextMatch &&
     showTeams[m.team] &&
-    (isPast(m.date) ? showPast : showFuture) &&
+    (isMatchOver(m) ? showPast : showFuture) &&
     (m.isHome ? showHome : showAway)
   );
+  if (showPast) visible.sort((a, b) => matchDateTime(b.date, b.timeStr) - matchDateTime(a.date, a.timeStr));
 
   if (!visible.length) {
     container.innerHTML = '<div class="status-msg">Keine Spiele angezeigt.</div>';
     return;
   }
 
-  const hasPast   = visible.some(m =>  isPast(m.date));
-  const hasFuture = visible.some(m => !isPast(m.date));
+  const hasPast   = visible.some(m =>  isMatchOver(m));
+  const hasFuture = visible.some(m => !isMatchOver(m));
   const showDivider = hasPast && hasFuture;
 
   container.innerHTML = visible.map((m, idx) => {
     const teamCls = m.team;
     const tagCls  = 'tag-' + m.team;
-    const past    = isPast(m.date);
+    const past    = isMatchOver(m);
     const extra   = (m.isHome ? ' home-game' : '') + (past ? ' past-game' : '');
     const tabelleBtn = `<button class="btn-tabelle" onclick="event.stopPropagation();showTable('${m.team}')">Tabelle</button>`;
     const wd      = WEEKDAYS[m.date.getDay()];
@@ -2293,7 +2344,7 @@ function renderMatches() {
     const homeSpan = `<span class="team${m.isHome ? '' : ' opponent'}">${esc(m.homeTeam)}</span>`;
     const awaySpan = `<span class="team${m.isHome ? ' opponent' : ''}">${esc(m.awayTeam)}</span>`;
 
-    const divider = (showDivider && !past && (idx === 0 || isPast(visible[idx - 1].date)))
+    const divider = (showDivider && !past && (idx === 0 || isMatchOver(visible[idx - 1])))
       ? '<div class="past-divider"></div>'
       : '';
 
@@ -2307,7 +2358,7 @@ function renderMatches() {
   <div class="card-tag-row"><span class="tag ${tagCls}">${m.label}</span></div>
   <div class="card-top">
     <span class="card-date">${wd} ${m.dateStr}<span class="card-time"> · ${m.timeStr}</span></span>
-    ${past ? '' : `<span class="card-countdown" data-matchtime="${matchDateTime(m.date, m.timeStr).getTime()}">${countdownLabel(m.date, m.timeStr)}</span>`}
+    ${past ? '' : `<span class="card-countdown" data-matchtime="${matchDateTime(m.date, m.timeStr).getTime()}" data-matchduration="${matchDurationMs(m)}">${countdownLabel(m.date, m.timeStr, m.label)}</span>`}
     ${tabelleBtn}
   </div>
   <div class="card-match"><div class="card-match-teams">${homeSpan}<span class="vs">vs.</span>${awaySpan}</div>${resultEl}</div>
@@ -2352,8 +2403,6 @@ function applyStateToButtons() {
 }
 
 let _favoritenOpen = false;
-let _favoritenBtnLeft = 0;
-let _favoritenBtnRight = 0;
 
 function toggleFavoriten() {
   if (_favoritenOpen) closeFavoriten(); else openFavoriten();
@@ -2361,8 +2410,7 @@ function toggleFavoriten() {
 
 function openFavoriten() {
   _favoritenOpen = true;
-  const row  = document.getElementById('team-select-row');
-  const btn  = document.getElementById('btn-favoriten-editor');
+  const closeBtn = document.getElementById('btn-favoriten-close');
   const card = document.getElementById('favoriten-card');
 
   // Load saved favorites into team buttons
@@ -2376,32 +2424,8 @@ function openFavoriten() {
     });
   }
   meineAuswahlActive = true;
+  closeBtn.innerHTML = 'Favoriten&shy;liste<br>schließen';
 
-  // Snapshot button position for animation
-  const rowRect = row.getBoundingClientRect();
-  const btnRect = btn.getBoundingClientRect();
-  _favoritenBtnLeft  = btnRect.left  - rowRect.left;
-  _favoritenBtnRight = rowRect.right - btnRect.right;
-
-  // Switch to absolute, matching current flex position
-  row.classList.add('favoriten-open');
-  btn.style.position   = 'absolute';
-  btn.style.zIndex     = '3';
-  btn.style.top        = '0';
-  btn.style.bottom     = '0';
-  btn.style.left       = _favoritenBtnLeft + 'px';
-  btn.style.right      = _favoritenBtnRight + 'px';
-  btn.innerHTML        = 'Favoriten&shy;liste schließen';
-  btn.classList.add('open');
-
-  // Animate btn to full row width
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    btn.style.transition = 'left 0.8s ease, right 0.8s ease';
-    btn.style.left  = '0';
-    btn.style.right = '0';
-  }));
-
-  // Show floating card
   card.style.display = 'block';
   requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('open')));
 }
@@ -2409,40 +2433,19 @@ function openFavoriten() {
 function closeFavoriten(immediate) {
   if (!_favoritenOpen) return;
   _favoritenOpen = false;
-  const row  = document.getElementById('team-select-row');
-  const btn  = document.getElementById('btn-favoriten-editor');
+  const closeBtn = document.getElementById('btn-favoriten-close');
   const card = document.getElementById('favoriten-card');
 
   // Save current team selection as favorites
   localStorage.setItem(LS_AUSWAHL, JSON.stringify({ ...showTeams }));
 
+  card.classList.remove('open');
   if (immediate) {
-    card.classList.remove('open');
     card.style.display = 'none';
-    btn.style.cssText = '';
-    btn.innerHTML = 'Meine<br>Favoriten<br>auswählen';
-    btn.classList.remove('open');
-    row.classList.remove('favoriten-open');
   } else {
-    // Animate btn back to original flex position
-    btn.style.transition = 'left 0.8s ease, right 0.8s ease';
-    btn.style.left  = _favoritenBtnLeft + 'px';
-    btn.style.right = _favoritenBtnRight + 'px';
-    let _cleanupDone = false;
-    function cleanup() {
-      if (_cleanupDone) return;
-      _cleanupDone = true;
-      btn.removeEventListener('transitionend', cleanup);
-      btn.style.cssText = '';
-      btn.innerHTML = 'Meine<br>Favoriten<br>auswählen';
-      btn.classList.remove('open');
-      row.classList.remove('favoriten-open');
-    }
-    btn.addEventListener('transitionend', cleanup);
-    setTimeout(cleanup, 900);
-    card.classList.remove('open');
-    setTimeout(() => { card.style.display = 'none'; }, 300);
+    setTimeout(() => { card.style.display = 'none'; }, 1550);
   }
+  closeBtn.innerHTML = 'Meine<br>Favoriten<br>auswählen';
 
   // Activate "Meine Favoriten" right button
   selectMode = 'meine';
@@ -2881,8 +2884,9 @@ function applyMeineFavoriten() {
   btn.addEventListener('click',      function() { if (!isTouch) applyMeineFavoriten(); });
 })();
 
-/* ── Favoriten-Editor: Klick → öffnen/schließen */
+/* ── Favoriten: Trigger in Controls-Bar und Close-Button im Panel */
 document.getElementById('btn-favoriten-editor').addEventListener('click', toggleFavoriten);
+document.getElementById('btn-favoriten-close').addEventListener('click', function() { closeFavoriten(); });
 
 /* ── Start ─────────────────────────────────────────────────── */
 function updateHeaderH() {
