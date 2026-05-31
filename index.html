@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>nuTab</title>
+</head>
+<body>
+
+<h1>Einbinden der (Handball) nuLiga-Tabellen und Spielplänen in eigene Vereins-Internet-Seiten</h1>
+
+<p>Wolltet ihr schon immer&nbsp;eine aktuelle Tabelle/Spielplan in eure eigenen
+Vereins-Internet-Seiten einbauen? Dann bietet sich hier die Möglichkeit dazu an. 
+<br>Jede in nuLiga geführte Tabelle (im Prinzip nicht nur für Handball, sondern auch für andere Sportarten) kann mit einfachsten Mitteln in die eigene Seite
+eingebaut werden, angezeigt wird die Tabelle in einer platzsparenden Form, die
+weitgehenst an die eigenen Bedürfnisse angepasst werden kann.&nbsp;</p>
+<p>Q: Welche Grundsvoraussetzungen muss mein Webserver erfüllen?<br>
+A: &lt;script&gt; -Tags müssen erlaubt sein. Dies ist in den meisten Servern
+möglich, in Foren in der Regel allerdings nicht</p>
+<p>Q: Sind die Tabellen aktuell?<br>
+A: Die Tabellen werden direkt von nuLiga geladen, sind also genau so aktuell, wie
+in nuLiga.</p>
+<p>Q: Welche Ligen kann ich anzeigen?<br>
+A: Alle Ligen, die in nuLiga vorhanden sind. Angegeben werden sie über die nuLiga URL.
+</p>
+<p>Q: Kann ich auch den Spielplan meiner Mannschaft anzeigen?<br>
+A: Ja. Dazu &lt;div class=&quot;srsPlan&quot; ...&gt; verwenden.</p>
+<p>Q: Kann ich auch den Gesamt-Spielplan meines Vereins anzeigen?<br>
+A: Ja. Dazu &lt;div class=&quot;srsPlanVerein&quot; ...&gt; verwenden.</p>
+<p>Q: Kann ich die Formatierung anpassen?<br>
+A: Ja. Bitte dazu tabellen.css laden, ändern, auf dem eigenen Server speichern,
+und von dort laden. Wer nicht weis, wovon ich rede, muss mit der gewählten
+Darstellung leben.</p>
+<p>Q: Kann ich die Formatierung auch durch Parameter über das Script anpassen?<br>
+A: Vielleicht mache ich das ja mal, wenn die Nachfrage dazu groß genug ist.
+Derzeit aber nicht geplant.</p>
+<p>Q: Kann ich die Spalten der Tabelle bestimmen?<br>
+A: Ja. Normale Tabelle und Mini-Tabelle werden ganz einfach unterstützt (siehe
+Beispiele). Es kann auch angegeben werden, welche Spalten in welcher Reihenfolge
+anzuzeigen sind (siehe Beispiele)</p>
+<p>Q: Kann ich noch mehr selber anpassen?<br>
+A: Ja, empfehle ich aber nicht, da ihr dann mit eurer Kopie meinen
+Aktualisierungen selber folgen müsst. Schildert mir, was ihr anpassen wollt,
+vielleicht bringe ich ja das unter. Oder schickt mir eure Version, wenn die
+Änderung allgemeingültig sein könnte.&nbsp;<br>
+Wollt ihr das aber trotzdem tun, tabellen.js kopieren, anpassen, auf dem eigenen Server speichern, und von
+dort laden. Auch in diesem Fall können die Tabellen über
+den "fetch_table" Server geladen werden.&nbsp;</p>
+<p>Q: Warum geht meine Vereinsseite in Mittelfranken oder dem Bayerischen Handballverband nach der Umstellung nicht mehr?<br>
+A: Die OpenSpource Version kommt ohne Datenbank auf dem Server aus. Damit können die alten Parameter srsKlasse, srsLiganummer, srsVerein
+nicht mehr auf die dafür passenden nuLiga URL-Parameter abgebildet werden.
+Also kann jetzt nur noch srsURL und srsClub und srsVerband zur Identifikation verwendet werden.
+Details siehe Beschreibung weiter unten.
+</p>
+<p>SRS ist historisch als Abkürzung von Schiedsrichter-Seiten entstanden.</p>
+<p>Staffel und Liga wird in dieser Beschreibung gleichwertig verwendet. In
+nuLiga besteht eine Liga aus mehreren Staffeln. Ich verwende Liga gleichwertig
+mit Staffel, eigentlich bezieht sich Tabelle und Spielplan immer auf eine
+Staffel (group in nuLiga).</p>
+<h1>Änderungen</h1>
+<dl>
+	<li>2022-04-16: Link auf Halle durch @Halle_Link.
+	<li>2021-03-27: Anpassung an URL und Layout Struktur von nuLiga. Tabelle nicht mehr über Team-Seite möglich. auchAK nicht mehr unterstützt
+	<li>2020-02-29: PHP 7.4 und Wochentag und Halle_Name_Kurz eingeführt (alles als Beitrag über Pull-Request)
+	<li>2019-09-09: srsAuchAK eingeführt. srsClub unterstützt auch Einschränkung auf bestimmte Ligen dieses Vereins.
+	<li>2019-06-23: Tennis Vereinsspielplan und Tennis Team-Tabelle geht jetz auch. Jede Tabelle kann über srsClass=xxx mit einer CSS Klasse versehen werden
+	<li>2019-06-10: Unterstützung für Tennis (Tabelle und Spielplan. Vereinsspielplan wird nicht unterstützt)
+	<li>2019-02-08: srsNeueVorne eingeführt um Vereinsspielplan verkehrt zu sortieren. Andere Sportarten als Handball duch srsSportart (zB DARTDE) eingeführt
+	<li>2018-07-22: Erste OpenSource Version, losgelöst von dem ursprünglichen Server
+	<li>2017-08-29: Link auf Spielbericht durch @sbb. Default als Link am Ergebnis.
+</dl>
+<h1>Vorbereitung</h1>
+<p>In jeder Seite müssen die folgenden Einträge vorhanden sein, um den
+benötigten JavaScript-Code zu laden.&nbsp;</p>
+<p>
+    &lt;!-- Einbinden der CSS und JS Dateien --><br>
+    &lt;link rel="stylesheet" type="text/css" href="//SERVER/pfad/tabellen/tabellen.css"><br>
+    &lt;script src="//SERVER/pfad/jquery.js" type="text/javascript">&lt;/script><br>
+    &lt;script src="//SERVER/pfad/tabellen.js" type="text/javascript">&lt;/script&gt;</p>
+<p>Falls auf der Seite JQuery schon geladen ist, dann kann die entsprechende
+Zeile von oben entfernt werden.</p>
+<p>Falls eure eigene Seite als https aufgerufen ist, dann bitte oben entsprechend src=https:... eingeben</p>
+<p>Danach können beliebig viele Tabellen oder Spielpläne durch entsprechend
+parametrierte &lt;div&gt; Elemente angezeigt werden.</p>
+<h1>Schreibweise der Parameter</h1>
+
+<p>Alle Parameter haben den Aufbau srsName. Dabei ist Klein- Großschreibung
+egal. srsURL kann also auch als srsurl geschrieben werden.</p>
+
+<p>Das &quot;markup&quot; ist leider schon so alt, dass es nicht kompatible mit
+HTML5 ist. Manche von euch können so Schwierigkeiten haben, wenn sie in relativ
+neuen CMS-Systemen arbeiten.</p>
+
+<p>Alle Parameter der Form srsXYZ können auch als data-srsXYZ angegeben werden.
+Und natürlich auch in kompletter Kleinschreibung. Damit sollte das Ganze
+konform zu HTML5 sein. Das alte Format wird weiterhin unterstützt.</p>
+
+<p>Beispiel wäre in neuer Schreibweise:
+    &lt;div class=&quot;srsPlan&quot; data-srsurl=&quot;...&quot; data-srsverein=&quot;Zirndorf&quot;&gt;&lt;/div&gt;
+(alt:
+    &lt;div class=&quot;srsPlan&quot; srsurl=&quot;...&quot; srsVerein=&quot;Zirndorf&quot;&gt;&lt;/div&gt;)</p>
+
+<h1>Tabelle einer Staffel (srsTab)</h1>
+<p>Allgemein kann eine Tabelle folgendermaßen eingebunden werden:&nbsp;<br>
+&lt;div class=&quot;srsTab&quot; Parameter=&quot;Wert&quot;&gt;&lt;/div&gt;</p>
+<p>In der kürzesten Form also<br>
+&lt;div class=&quot;srsTab&quot; srsurl=&quot;...&quot;&gt;&lt;/div&gt;</p>
+<p>Notwendige Parameter (die Staffel muss durch einen der folgenden Parameter
+gewählt werden)</p>
+<table border="1">
+  <tr>
+    <td>srsURL</td>
+    <td>URL auf Tabelle der Liga in nuLiga.<br>
+      zB srsURL=&quot;<a href="https://bhv-handball.liga.nu/cgi-bin/WebObjects/nuLigaHBDE.woa/wa/groupPage?championship=MF+2019%2F20&group=246367">https://bhv-handball.liga.nu/cgi-bin/WebObjects/nuLigaHBDE.woa/wa/groupPage?championship=MF+2019%2F20&group=246367</a>&quot;<br>
+  </tr>
+</table>
+<p>&nbsp;Optionale Parameter</p>
+<table border="1">
+  <tr>
+    <td>srsTitle</td>
+    <td>Titel, der über der Tabelle angezeigt wird</td>
+  </tr>
+  <tr>
+    <td>srsVerein</td>
+    <td>Name des Vereins, dessen Zeilen in der Tabelle und in den Spielen
+      herausgehoben werden sollen. Geht derzeit nur einer.&nbsp;</td>
+  </tr>
+  <tr>
+    <td>srsMiniTab</td>
+    <td>Es wird eine kleine Tabelle ausgegeben, nur Platz, Mannschaft, Punkte<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsAuchSpiele</td>
+    <td>Vor und nach der Tabelle werden auch die letzten und nächsten Spiele
+      ausgegeben<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsKeineAK</td>
+    <td>Mannschaften, die außer Konkurrenz spielen, werden nicht ausgegeben<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsAuchAK</td>
+    <td>NICHT MEHR UNTERSTÜTZT. Mannschaften, die außer Konkurrenz spielen, werden normal eingereit in der Tabelle ausgegeben<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsKeineEx</td>
+    <td>Mannschaften, die zurückgezogen haben, werden nicht ausgegeben<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsTabellenKopf</td>
+    <td>Text, der in der Kopfzeile ausgegeben wird, Spalten durch ; getrennt<br>
+      Wenn der Wert - (also srsTabellenKopf=&quot;-&quot;) ist, dann wird kein
+      Tabellenkopf bei der Tabelle angegeben</td>
+  </tr>
+  <tr>
+    <td>srsTabellenSpalten</td>
+    <td>Felder, die aus dem Tabellendaten in die Spalten gesetzt werden soll.
+      Feldnamen, oder Ausdrücke wie oben beschrieben</td>
+  </tr>
+  <tr>
+    <td>srsTabellenFormat</td>
+    <td>Für jede Spalte ein Wert aus (l,r,c), durch ; getrennt</td>
+  </tr>
+  <tr>
+    <td>srsClass</td>
+    <td>CSS Klasse für diese Tabelle. Damit kann dann sehr spezifisch mittels CSS formatiert werden. Beispiel: srsClass="myTable"</td>
+  </tr>
+</table>
+<p>&nbsp;Anzeige der Spalten selber steuern (Spaltennamen durch ";" trennen)</p>
+    &lt;div class=&quot;srsTab&quot; srsurl=&quot;...&quot; srsVerein=&quot;Zirndorf&quot;
+    srsTabellenKopf=&quot;M;Pl&quot; srsTabellenSpalten=&quot;Team_Kurzname;Platz&quot;
+    srsTabellenFormat=&quot;l;c&quot;&gt;&lt;/div&gt;<p>Spaltennamen sind die
+    folgenden Feldnamen:&nbsp;<br>
+Platz, Team_Kurzname, PlusPunkte, MinusPunkte, Spiele (sind die Begegnungen),
+    SpieleGewonnen, SpieleUnentschieden, SpieleVerloren, PlusTore, MinusTore, DiffTore<br>
+    Für Tennis noch: PlusMatchPunkte, MinusMatchPunkte, PlusSaetze, MinusSaetze, PlusSpiele, MinusSpiele<br>
+    Für Tennis Team-Tabelle noch: PlusEinzel, MinusEinzel, PlusDoppel, MinusDoppel, PlusGesamt, MinusGesamt<br>
+    <br>
+TabellenFormat: gibt für die Spalte an, ab links (l), rechtbündig (r),
+    oder zentriert (c)</p>
+    <p>Der Inhalt einer Spalte kann auch eine &quot;Formel&quot; sein, die sich
+    auf eine oder mehrere Felder von oben beziehen können. </p>
+    <ul>
+      <li>Verketten mehrer Felder in einer Spalte durch ein "+": srsTabellenSpalten=&quot;Platz;Team_Kurzname+%
+        Tore +PlusTore&quot;</li>
+      <li>Konstanten: starten mit %, ansonsten ist es ein Feldname</li>
+      <li>Substring: feldname!start!len: Team_Kurzname!2!2: liefert 2
+        Zeichen, ab dem zweiten Zeichen</li>
+      <li>Pattern matching: feldname/pattern/replacement: braucht man vor allem,
+        um das Spieldatum vernünftig darzustellen, da XML ein komisches Format
+        hat, hier das Beispiel dafür: SpieldatumTag/^..(..).(..).(..)$/$3.$2.$1;Spieldatum!11!5,
+        gilt aber nicht für die Tabelle, sondern den Spielplan vor und nach der
+        Tabelle</li>
+      <li>
+      Feld als HREF einfügen (v.a. für den Link auf den Spielberichtsbogen) feldFormelVonOben@feldHREF.
+      zB Heim+%:+Gast@sbb
+	</li>
+    </ul>
+    <p>Um die Zeit anzuzeigen, kann man also Spieldatum!11!5 verwenden.</p>
+    <p>Dies ist natürlich nur noch den Experten vorbehalten, ist aber gar nicht
+    so kompliziert, wie es klingt.</p>
+<h1>Spielplan einer Staffel (srsPlan)</h1>
+<p>Ein Spielplan einer Staffel oder einer Mannschaft kann&nbsp; folgendermaßen eingebunden werden:&nbsp;<br>
+&lt;div class=&quot;srsPlan&quot; Parameter=&quot;Wert&quot;&gt;&lt;/div&gt;</p>
+<p>Notwendige Parameter (die Staffel muss durch einen der folgenden Parameter
+gewählt werden)</p>
+<table border="1">
+  <tr>
+    <td>srsURL</td>
+    <td>URL auf Tabelle der Liga in nuLiga.<br>
+      zB srsURL=&quot;<a href="https://bhv-handball.liga.nu/cgi-bin/WebObjects/nuLigaHBDE.woa/wa/groupPage?championship=MF+2019%2F20&group=246367">https://bhv-handball.liga.nu/cgi-bin/WebObjects/nuLigaHBDE.woa/wa/groupPage?championship=MF+2019%2F20&group=246367</a>&quot;<br>
+      Für Tennis ist auch die URL auf die Team-Seite möglich, dann wird der Spielplan der Mannschaft ausgegeben, und nicht der Spielplan der Liga.<br>
+      zB "<a href="https://htv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/teamPortrait?team=2306425&championship=TB+Mittelhessen+19&group=22">https://htv.liga.nu/cgi-bin/WebObjects/nuLigaTENDE.woa/wa/teamPortrait?team=2306425&championship=TB+Mittelhessen+19&group=22</a>"
+  </tr>
+</table>
+<p>&nbsp;Optionale Parameter</p>
+<table border="1">
+  <tr>
+    <td>srsTitle</td>
+    <td>Titel, der über dem Spielplan angezeigt wird</td>
+  </tr>
+  <tr>
+    <td>srsVerein</td>
+    <td>Name des Vereins, dessen Spiele angezeigt oder hervorgehoben werden
+      sollen. Geht derzeit nur einer.&nbsp;</td>
+  </tr>
+  <tr>
+    <td>srsAlle</td>
+    <td>Zeigt in dem Spielplan die Spiele aller Mannschaften an. Sonst werden nur die Spiele des srsVerein angezeigt.<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsHeimGast</td>
+    <td>Zeigt in dem Spielplan nur Heim- oder Auswärtsspiele
+      an.<br>
+      =1: Nur Heimspiele anzeigen<br>
+      =2: nur Auswärtsspiele anzeigen<br>
+      andere Werte oder wenn der Parameter fehlt, schränkt nicht weiter ein.
+      srsVerein muss dazu angegeben sein.</td>
+  </tr>
+  <tr>
+    <td>srsVon und srsBis</td>
+    <td>Damit kann man angeben, für welchen
+      Zeitraum man die Spiele anzeigen will. Default ist 14/14.&nbsp;<br>
+      Kann ein Datum in der Form dd.mm.yyyy sein. Oder eine Zahl, die die Anzahl
+      der Tage relativ zu heute anzeigt.&nbsp;<br>
+      srsVon=14 sagt: vor 14 Tagen, srsBis=21 sagt alles innerhalb er nächsten
+      21 Tage.<br>
+      TBD: gilt dies bei Plan?</td>
+  </tr>
+  <tr>
+    <td>srsAktuell</td>
+    <td>Zeigt in dem Spielplan nur die aktuellen Spiele an, das sind
+      die Spiele um den aktuellen Spieltag.&nbsp;<br>
+      Dies ist einfacher als von/bis, v.a. wenn die Spieltage weit auseinander
+      liegen.<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsNurHalle</td>
+    <td>Es werden nur die Spiele ausgegeben, die in dieser Halle stattfinden.
+      Mehrere Hallen können mit , getrennt angegeben werden.&nbsp;<br>
+      Wirkt als Filter und schränkt alles was durch andere Angaben gefunden
+      wurde, auf diese Hallen ein.<br>
+      Beispiel: srsNurHalle=OAS,230001<br>
+      Im BHV können auch Hallenkürzel verwendet werden. Sonst die
+      Hallenbezeichnung in nuLiga.</td>
+  </tr>
+  <tr>
+    <td>srsOhneHalle</td>
+    <td>Halle wird im Standardausgabeformat nicht angezeigt</td>
+  </tr>
+  <tr>
+    <td>srsTabellenKopf</td>
+    <td>Text, der in der Kopfzeile ausgegeben wird, Spalten durch ; getrennt<br>
+      Wenn der Wert - (also srsTabellenKopf=&quot;-&quot;) ist, dann wird kein
+      Tabellenkopf bei der Tabelle angegeben</td>
+  </tr>
+  <tr>
+    <td>srsTabellenSpalten</td>
+    <td>Felder, die aus dem Tabellendaten in die Spalten gesetzt werden soll.
+      Feldnamen, oder Ausdrücke wie oben beschrieben</td>
+  </tr>
+  <tr>
+    <td>srsTabellenFormat</td>
+    <td>Für jede Spalte ein Wert aus (l,r,c), durch ; getrennt</td>
+  </tr>
+  <tr>
+    <td>srsMaxZeilen</td>
+    <td>Beschränkt die Anzahl der Zeilen (Spiele)</td>
+  </tr>
+  <tr>
+    <td>srsClass</td>
+    <td>CSS Klasse für diese Tabelle. Damit kann dann sehr spezifisch mittels CSS formatiert werden. Beispiel: srsClass="myTable"</td>
+  </tr>
+</table>
+<p>Spaltennamen sind die
+    folgenden Feldnamen:&nbsp;<br>
+ Liga_Nummer, Liga_Name_kurz, Liga_Name_lang, Spieldatum (Form
+    2008-05-03T17:45:00+02:00), Spieltag, SpieldatumTag (Form 2008.05.03), Wochentag, Spielnummer, HeimTeam_Name_lang, HeimTeam_Name_kurz, GastTeam_Name_lang, GastTeam_Name_kurz, Halle_Nummer, Halle_Kuerzel, Halle_Name_kurz,
+    Halle_Abk, Punkte_Heim, Tore_Heim, Punkte_Gast, Tore_Gast, sbb, Halle_Link<br>
+    Für Tennis noch: MatchPunkte_Heim, MatchPunkte_Gast, Saetze_Heim, Saetze_Gast, Spiele_Heim, Spiele_Gast
+    
+</p>
+<p>&nbsp;</p>
+<h1>Gesamtspielplan eines Vereins (srsPlanVerein)</h1>
+<p>Der Gesamt-Spielplan eines Vereins kann folgendermaßen eingebunden werden:<br>
+&lt;div class=&quot;srsPlanVerein&quot; Parameter=&quot;Wert&quot;&gt;&lt;/div&gt;</p>
+<p>Notwendige Parameter (der Verein muss durch srsClub und srsVerband bestimmt werden)
+</p>
+<table border="1">
+  <tr>
+    <td>srsClub</td>
+    <td>nuLiga Club-Nummer des Vereins, dessen Gesamtplan ausgegeben werden soll. Ist der Wert des club Parameters in nuLiga (nicht die
+      Vereinsnummer)<br>
+      In diesem Fall muss auch der Landesverband über srsVerband angegeben
+      werden, sonst wird der BHV angenommen.<br>
+      Mehrere Clubs können angegeben werden, mit , getrennt<br>
+      Beispiel: &lt;div class="srsPlanVerein" srsVerband="hvn-handball" srsClub="32402" srsAlle=0 srsVon=7 srsBis=21 &gt;&lt;/div&gt;&nbsp;
+      <br>
+      <br>Pro Verein kann noch eingeschränkt werden, welche Ligen dieses Vereins eingemischt werden sollen.
+      <br>Dies geschieht durch Angabe der exakten Liga-Bezeichung aus dem Vereinsspielplan, nach einem "/". Mehrere Ligen können mit ";" getrennt angegeben werden.
+      <br>Beispiel srsClub="32402,30745/LL MB;BZL WD,30777/ÜBOL WA"
+    </td>
+  </tr>
+  <tr>
+    <td>srsVerband</td>
+    <td>Nur wenn srsClub angegeben wurde. Kann für den BHV verwendet werden. Muss für andere Landesverbände
+      angegeben werden.<br>
+ Dieser besteht aus den Zeichen ab dem // in der URL bis zum .liga.nu,&nbsp;also bremerhv-handball, oder hvn-handball, oder bdv-dart für Dart</td>
+  </tr>
+  <tr>
+    <td>srsSportart</td>
+    <td>Falls eine andere Sportart als Handball angezeigt werden soll, zB DARTDE für Dart in Deutschland. 
+	    <br>
+	    Dies ist in der URL (WebObjects/nuLigaDARTDE.woa/wa/) der Teil zwischen nuLiga und .woa, der dort DARTDE sein wird.
+	    Falls nicht angegeben wird HBDE (also Handball) genommen.
+	    <br>Gibt es bei Tennis nicht, dort sollte man srsPlanVerein also nicht nehmen
+	</td>
+  </tr>
+</table>
+<p>&nbsp;Optionale Parameter</p>
+<table border="1">
+  <tr>
+    <td>srsTitle</td>
+    <td>Titel, der über dem Spielplan angezeigt wird</td>
+  </tr>
+  <tr>
+    <td>srsVerein</td>
+    <td>Name des Vereins, dessen Spiele angezeigt oder hervorgehoben werden
+      sollen. Geht derzeit nur einer.&nbsp;</td>
+  </tr>
+  <tr>
+    <td>srsAlle</td>
+    <td>Es werden alle Spiele eines Vereins der Saison angezeigt,
+      ansonsten nur die Spiele zwei Wochen vor und nach dem aktuellen Datum.
+      Siehe auch von und bis.<br>
+      NuLiga erlaubt nur 200 Einträge in einer Suche nach allen Spielen eines
+      Vereins, also ist srsAlle in diesem Fall nur was für kleine Vereine.<br>
+      Mögliche Werte: 0 (oder fehlt), 1</td>
+  </tr>
+  <tr>
+    <td>srsHeimGast</td>
+    <td>Zeigt in dem Spielplan nur noch Heim- oder Auswärtsspiele
+      an.<br>
+      =1: Nur Heimspiele anzeigen<br>
+      =2: nur Auswärtsspiele anzeigen<br>
+      andere Werte oder wenn der Parameter fehlt, schränkt nicht weiter ein.
+      srsVerein muss dazu angegeben sein.</td>
+  </tr>
+  <tr>
+    <td>srsVon und srsBis</td>
+    <td>Damit kann man angeben, für welchen
+      Zeitraum man die Spiele anzeigen will. Default ist 14/14.&nbsp;<br>
+      Kann ein Datum in der Form dd.mm.yyyy sein. Oder eine Zahl, die die Anzahl
+      der Tage relativ zu heute anzeigt.&nbsp;<br>
+      srsVon=14 sagt: vor 14 Tagen, srsBis=21 sagt alles innerhalb er nächsten
+      21 Tage.</td>
+  </tr>
+  <tr>
+    <td>srsNeueVorne</td>
+    <td>plan wird verkehrt sortiert, also neueste Spiele sind oben. Dies ist sinnvoll bei der Anzeige der Historie.  </td>
+  </tr>
+  <tr>
+    <td>srsNurHalle</td>
+    <td>Es werden nur die Spiele ausgegeben, die in dieser Halle stattfinden.
+      Mehrere Hallen können mit , getrennt angegeben werden.&nbsp;<br>
+      Wirkt als Filter und schränkt alles was durch andere Angaben gefunden
+      wurde, auf diese Hallen ein.<br>
+      Beispiel: srsNurHalle=OAS,230001<br>
+      Im BHV können auch Hallenkürzel verwendet werden. Sonst die
+      Hallenbezeichnung in nuLiga.</td>
+  </tr>
+  <tr>
+    <td>srsOhneHalle</td>
+    <td>Halle wird im Standardausgabeformat nicht angezeigt.&nbsp;</td>
+  </tr>
+  <tr>
+    <td>srsTabellenKopf</td>
+    <td>Text, der in der Kopfzeile ausgegeben wird, Spalten durch ; getrennt<br>
+      Wenn der Wert - (also srsTabellenKopf=&quot;-&quot;) ist, dann wird kein
+      Tabellenkopf bei der Tabelle angegeben</td>
+  </tr>
+  <tr>
+    <td>srsTabellenSpalten</td>
+    <td>Felder, die aus dem Tabellendaten in die Spalten gesetzt werden soll.
+      Feldnamen, oder Ausdrücke wie oben beschrieben</td>
+  </tr>
+  <tr>
+    <td>srsTabellenFormat</td>
+    <td>Für jede Spalte ein Wert aus (l,r,c), durch ; getrennt</td>
+  </tr>
+  <tr>
+    <td>srsMaxZeilen</td>
+    <td>Beschränkt die Anzahl der Zeilen (Spiele)</td>
+  </tr>
+  <tr>
+    <td>srsClass</td>
+    <td>CSS Klasse für diese Tabelle. Damit kann dann sehr spezifisch mittels CSS formatiert werden. Beispiel: srsClass="myTable"</td>
+  </tr>
+</table>
+<h1>Spielplan in einer Halle (srsPlanHalle)</h1>
+<p>Um es gleich vorwegzunehmen: dies geht noch gar nicht! Es war aber eine
+Anforderung dazu da, und dies könnte man auf nuLiga auch einfach abbilden.
+Vielleicht mach ich das also irgendwann.</p>
+<p>In der Zwischenzeit kann man sich dadurch helfen, dass der Spielplan für
+einen oder mehrere Vereine (über srsClub) ausgegeben wird, dieser aber über
+srsNurHalle auf eine oder mehrere Hallen einschränkt. Ist nicht genau das
+gleiche, v.a. nicht bei Turniermodus z.B. während der Quali.&nbsp;</p>
+<h1>Links auf alle Ligen der Seite</h1>
+<p>In eine Seite können mehrere der obigen Tabellen/Spielpläne eingefügt
+werden. Links zu allen diesen Tabellen werden in alle &lt;div class=&quot;srsLinks&quot;&gt;
+eingebaut.</p>
+<p>Z.B. kann das so ausschauen, um drei Tabellen anzuzeigen, und über den drei
+Tabellen eine Link-Leiste auf die einzelnen Tabellen.<br>
+&lt;div class=&quot;srsLinks&quot;&gt;&lt;/div&gt;<br>
+&lt;div class=&quot;srsTab&quot; srsurl=&quot;...BOLM&quot;&gt;&lt;/div&gt;<br>
+&lt;div class=&quot;srsTab&quot; srsurl=&quot;...BOLF&quot;&gt;&lt;/div&gt;<br>
+&lt;div class=&quot;srsTab&quot; srsurl=&quot;...LLFN&quot;&gt;&lt;/div&gt;</p>
+<h1>Beispiele</h1>
+<table border="1" width="100%">
+  <tr>
+    <td colspan=2>
+      <h3>&nbsp;Anzeige einer &quot;Mini&quot; Tabelle (falls man wenig
+      Platz auf seiner Seite verbrauchen möchte)</h3>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<div class="srsTab" srsurl="..." srsVerein="Zirndorf" srsMiniTab="1"></div>
+</td>
+    <td>
+    &lt;div class="srsTab" srsurl="..." srsVerein="Zirndorf" srsMiniTab="1">&lt;/div&gt;
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+      <h3>&nbsp;Anzeige einer Tabelle, die auch Spiele vor und nach der Tabelle
+      anzeigt</h3>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<div class="srsTab" srsurl="..." srsVerein="Zirndorf" srsAuchSpiele="1"></div>
+</td>
+    <td>
+    &lt;div class="srsTab" srsurl="..." srsVerein="Zirndorf" srsAuchSpiele="1">&lt;/div&gt;
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+      <h3>&nbsp;Anzeige einer &quot;normalen&quot; Tabelle</h3>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<div class="srsTab" srsliganummer="24022000" srsVerein="Buckenhofen"></div>
+</td>
+    <td>
+    &lt;div class=&quot;srsTab&quot;  srsurl="..." srsVerein=&quot;Buckenhofen&quot;&gt;&lt;/div>
+    </td>
+  </tr>
+</table>
+<h1>Diverses</h1>
+
+<h2>Falls der Server unter HTTPS läuft</h2>
+
+<p>Alle links, die über http://... eingebunden werden, können 
+nicht geladen werden. Bitte in diesem Fall https:// für die Links   
+verwenden.
+</p>
+
+<h2>Verwendung von jQuery</h2>
+
+<p>Solltet ihr auf eurer Seite jQuery schon verwenden und geladen haben, lasst
+doch das nochmalige Laden von meiner Seite weg. Mit etwas Glück habe ich mit
+eurer jQuery Version keine Probleme.&nbsp;</p>
+</body>
+</html> 
+
+
